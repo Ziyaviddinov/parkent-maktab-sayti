@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parkent Specialized School</title>
+
+    <link rel="icon" type="image/x-icon" href="favicon_io/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
+    <!-- FontAwesome Ikonkalar ro'yxati -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
+        integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Google Shriftdan Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================================================
+           1. UMUMIY VA FON SOZLAMALARI (ZAMONAVIY GLOW & GRID EFFECTS)
+        ======================================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            color: #1d1d1f;
+            background-color: #f8fafc;
+
+            /* Matematik/Ilmiy chizma katakchalari (Graph Paper Effect) */
+            background-image:
+                linear-gradient(rgba(13, 27, 42, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(13, 27, 42, 0.02) 1px, transparent 1px),
+                linear-gradient(rgba(13, 27, 42, 0.01) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(13, 27, 42, 0.01) 2px, transparent 2px);
+            background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+            background-position: center center;
+
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Orqa fondagi tarqoq yorug'lik effektlari */
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(140px);
+            z-index: -1;
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        body::before {
+            background: radial-gradient(circle, #ffb703 0%, transparent 70%);
+            top: -200px;
+            left: -100px;
+        }
+
+        body::after {
+            background: radial-gradient(circle, #0d1b2a 0%, transparent 70%);
+            bottom: -200px;
+            right: -100px;
+        }
+
+        /* ========================================================
+           2. NAVBAR & NAVIGATSIYA MENYU (MEGA DROPDOWN)
+        ======================================================== */
+        .navbar {
+            background-color: #0b2545;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid #ffb703;
+        }
+
+        .nav-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .nav-logo {
+            height: 50px;
+        }
+
+        .logo-divider {
+            width: 1px;
+            height: 35px;
+            background-color: rgba(255, 255, 255, 0.3);
+            margin: 0 15px;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-name {
+            color: #fff;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-sub {
+            color: #ffb703;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            gap: 5px;
+        }
+
+        .nav-menu>li>a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 15px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu>li>a:hover,
+        .nav-menu>li>a.active {
+            color: #ffb703;
+        }
+
+        .nav-menu>li>a i {
+            font-size: 11px;
+            transition: transform 0.3s;
+        }
+
+        .nav-menu>li:hover>a i {
+            transform: rotate(180deg);
+        }
+
+        .mega-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(15px);
+            width: 95vw;
+            max-width: 1200px;
+            background-color: #0b2545;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-menu>li:hover .mega-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .mega-col h4 {
+            color: #ffb703;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .mega-col ul {
+            list-style: none;
+        }
+
+        .mega-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .mega-col ul li a {
+            color: #e2e8f0;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: block;
+        }
+
+        .mega-col ul li a:hover {
+            color: #fff;
+            padding-left: 5px;
+        }
+
+        .btn-yellow {
+            background-color: #ffb703;
+            color: #0b2545 !important;
+            border-radius: 8px;
+            font-weight: 600 !important;
+            padding: 10px 20px !important;
+            margin-left: 10px;
+            box-shadow: 0 4px 15px rgba(255, 183, 3, 0.2);
+            transition: all 0.3s !important;
+        }
+
+        .btn-yellow:hover {
+            background-color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: #fff;
+            border-radius: 2px;
+        }
+
+        /* ========================================================
+           3. MATN QISMI: MAKET (SPLIT LAYOUT & GLASSMORPHISM)
+        ======================================================== */
+        .about-section {
+            max-width: 1300px;
+            margin: 80px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-left {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .about-section h1 {
+            font-size: 44px;
+            font-weight: 800;
+            color: #0b2545;
+            letter-spacing: -1.5px;
+            line-height: 1.15;
+        }
+
+        .about-section p {
+            font-size: 17px;
+            line-height: 1.8;
+            color: #4a5568;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 22px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(11, 37, 69, 0.04);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(11, 37, 69, 0.08);
+            border-color: #ffb703;
+        }
+
+        .stat-card i {
+            font-size: 24px;
+            color: #38bdf8;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .stat-card h3 {
+            font-size: 16px;
+            color: #0b2545;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .stat-card p {
+            font-size: 13.5px;
+            color: #718096;
+            line-height: 1.5;
+        }
+
+        /* O'ng tomon vizual blok - Rasmlar uchun */
+        .about-right {
+            position: relative;
+            width: 100%;
+            height: 480px;
+        }
+
+        .about-image-wrapper {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0b2545 0%, #134074 100%);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(11, 37, 69, 0.15);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .school-main-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.5s ease;
+        }
+
+        .about-image-wrapper:hover .school-main-img {
+            transform: scale(1.05);
+        }
+
+        .floating-badge {
+            position: absolute;
+            bottom: -25px;
+            left: -25px;
+            background: #ffb703;
+            color: #0b2545;
+            padding: 18px 28px;
+            border-radius: 18px;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 15px 30px rgba(255, 183, 3, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        /* ========================================================
+           4. FOOTER TUZILISHI
+        ======================================================== */
+        .footer {
+            background-color: #0b2545;
+            color: #fff;
+            padding: 60px 0 20px 0;
+            margin-top: 100px;
+            border-top: 4px solid #ffb703;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand p {
+            color: #a0aec0;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 15px 0;
+        }
+
+        .footer-logo {
+            height: 50px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 12px;
+        }
+
+        .footer-social a {
+            width: 38px;
+            height: 38px;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer-social a:hover {
+            background-color: #ffb703;
+            color: #0b2545;
+            transform: translateY(-3px);
+        }
+
+        .footer-grid h4 {
+            color: #ffb703;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links ul li a {
+            color: #a0aec0;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .footer-links ul li a:hover {
+            color: #fff;
+        }
+
+        .footer-contact p {
+            color: #a0aec0;
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-map iframe {
+            width: 100%;
+            height: 180px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #a0aec0;
+        }
+
+        .footer-bottom h3 a {
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .footer-bottom h3 a:hover {
+            color: #ffb703;
+        }
+
+        /* ========================================================
+           5. MEDIA QUERIES (RESPONSIVLIK)
+        ======================================================== */
+        @media (max-width: 1440px) {
+.hamburger {
+                display: flex;
+            }
+
+.nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: #0b2545;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px;
+                max-height: 80vh;
+                overflow-y: auto;
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            }
+
+.nav-menu.active {
+                display: flex;
+            }
+
+.nav-menu>li {
+                width: 100%;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            }
+
+.nav-menu>li>a {
+                justify-content: space-between;
+                padding: 15px 10px;
+                width: 100%;
+            }
+
+.btn-yellow {
+                margin: 15px 10px 0 10px !important;
+                text-align: center;
+                display: block;
+            }
+
+.mega-menu {
+                position: static;
+                transform: none !important;
+                left: auto !important;
+                width: 100% !important;
+                box-shadow: none;
+                padding: 10px 10px 20px 20px;
+                grid-template-columns: 1fr !important;
+                gap: 20px;
+                background-color: transparent;
+                display: none;
+                opacity: 1;
+                visibility: visible;
+                max-width: 100% !important;
+            }
+
+.mega-menu.open {
+                display: grid;
+            }
+}
+
+@media (max-width: 992px) {
+.about-section {
+                grid-template-columns: 1fr;
+                gap: 50px;
+                margin: 40px auto;
+            }
+
+.about-section h1 {
+                font-size: 34px;
+            }
+
+.about-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+.about-right {
+                height: 350px;
+            }
+
+.floating-badge {
+                bottom: -15px;
+                left: 15px;
+                padding: 15px 20px;
+                font-size: 13px;
+            }
+
+.footer-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+.footer-bottom {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+}
+
+        @media (max-width: 600px) {
+            .about-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .about-right {
+                height: 280px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR QISMI -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo-wrapper">
+                <img src="logo1.png" alt="PTM Logo" class="nav-logo">
+                <div class="logo-divider"></div>
+                <div class="logo-text">
+                    <span class="brand-name">PARKENT</span>
+                    <span class="brand-sub">SPECIALIZED SCHOOL</span>
+                </div>
+            </a>
+
+            <button class="hamburger" id="hamburgerBtn" aria-label="Menyuni ochish">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Bosh sahifa</a></li>
+
+                <!-- DROPDOWN 1: BIZ HAQIMIZDA -->
+                <li class="dropdown-item">
+                    <a href="#" class="dropdown-toggle">Biz haqimizda <i class="fa-solid fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-col">
+                            <h4>Rahbariyat</h4>
+                            <ul>
+                                <li><a href="direktor-qutlovi.html">Direktor qutlovi</a></li>
+                                <li><a href="rahbariyat.html">Rahbariat tarkibi</a></li>
+                                <li><a href="kuzatuv-kengashi.html">Kuzatuv kengashi</a></li>
+                            </ul>
+                        </div>
+                        <div class="mega-col">
+                            <h4>Umumiy ma'lumot</h4>
+                            <ul>
+                                <li><a href="index.html#about">Maktab haqida</a></li>
+                                <li><a href="maktab-broshyurasi.html">Maktab broshyurasi</a></li>
+                                <li><a href="ochiq-malumotlar.html">Ochiq ma'lumotlar</a></li>
+                            </ul>
+                        </div>
+                        <div class="mega-col">
+                            <h4>Jamoatchilik</h4>
+                            <ul>
+                                <li><a href="oquvchi-ovozi.html">O'quvchi ovozi</a></li>
+                                <li><a href="xodimlarimiz.html">Xodimlarimiz</a></li>
+                                <li><a href="vakansiyalar.html">Vakansiyalar</a></li>
+                            </ul>
+                        </div>
+                        <div class="mega-col">
+                            <h4>Xavfsizlik</h4>
+                            <ul>
+                                <li><a href="oquvchilar-himoyasi.html">O'quvchilar himoyasi</a></li>
+                                <li><a href="tibbiy-yordam.html">Tibbiy yordam</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- DROPDOWN 2: TA'LIM -->
+                <li class="dropdown-item">
+                    <a href="#" class="dropdown-toggle">Ta'lim <i class="fa-solid fa-chevron-down"></i></a>
+                    <div class="mega-menu" style="grid-template-columns: repeat(3, 1fr); max-width: 700px;">
+                        <div class="mega-col">
+                            <h4>Dasturlar</h4>
+                            <ul>
+                                <li><a href="foundation-dasturi.html">Foundation dasturi</a></li>
+                                <li><a href="ib-dasturi.html">Xalqaro Bakalavriat (IB)</a></li>
+                            </ul>
+                        </div>
+                        <div class="mega-col">
+                            <h4>Qabul</h4>
+                            <ul>
+                                <li><a href="qabul-jarayoni.html">Qabul jarayoni 2026-2027</a></li>
+                                <li><a href="qabul-imtihonlari.html">Qabul imtihonlari</a></li>
+                                <li><a href="qabul-siyosati.html">Qabul siyosati</a></li>
+                            </ul>
+                        </div>
+                        <div class="mega-col">
+                            <h4>Imkoniyatlar</h4>
+                            <ul>
+                                <li><a href="savollar.html">Ko'p beriladigan savollar</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- DROPDOWN 3: MASHG'ULOTLAR -->
+                <li class="dropdown-item">
+                    <a href="#" class="dropdown-toggle">Mashg'ulotlar <i class="fa-solid fa-chevron-down"></i></a>
+                    <div class="mega-menu" style="grid-template-columns: repeat(4, 1fr); max-width: 900px;">
+                        <div class="mega-col">
+                            <h4>Mashg'ulotlar</h4>
+                            <ul>
+                                <li><a href="bilim-nazariyasi.html">Bilim nazariyasi</a></li>
+                                <li><a href="ijodkorlik-faoliyat-xizmat.html">Ijodkorlik, Faoliyat, Xizmat</a></li>
+                                <li><a href="insho-yozish-sanati.html">Insho yozish san'ati</a></li>
+                                <li><a href="sport.html">Sport</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- DROPDOWN 4: YORDAM XIZMATI -->
+                <li class="dropdown-item">
+                    <a href="#" class="dropdown-toggle">Yordam xizmati <i class="fa-solid fa-chevron-down"></i></a>
+                    <div class="mega-menu" style="grid-template-columns: repeat(3, 1fr); max-width: 700px;">
+                        <div class="mega-col">
+                            <h4>Yordam xizmati</h4>
+                            <ul>
+                                <li><a href="maslahat-xizmati.html">Maslahat xizmati</a></li>
+                                <li><a href="tibbiy-yordam.html">Tibbiy yordam</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+
+                <li><a href="oqituvchilar.html">O'qituvchilar</a></li>
+
+                <!-- DROPDOWN 5: XABARLAR -->
+                <li class="dropdown-item">
+                    <a href="#" class="dropdown-toggle">Xabarlar <i class="fa-solid fa-chevron-down"></i></a>
+                    <div class="mega-menu" style="grid-template-columns: repeat(2, 1fr); max-width: 500px;">
+                        <div class="mega-col">
+                            <h4>Xabarlar</h4>
+                            <ul>
+                                <li><a href="songgi-yangiliklar.html">So'nggi yangiliklar</a></li>
+                                <li><a href="kutilayotgan-tadbirlar.html">Kutilayotgan tadbirlar</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+
+                <li><a href="index.html#schedule">Dars jadvali</a></li>
+                <li><a href="index.html#contact" class="btn-yellow">Bog'lanish</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- MAKTAB HAQIDA KONTENT QISMI -->
+    <main class="about-section" id="about">
+        <div class="about-left">
+            <h1>Parkent tuman ixtisoslashtirilgan maktabi</h1>
+            <p>
+                Maktabimiz zamonaviy ta'lim standartlariga javob beradigan, ilg'or raqamli texnologiyalar va boy
+                tajribaga ega kreativ pedagoglar jamoasi bilan ta'minlangan professional ilm maskanidir. Biz har bir
+                o'quvchining individual qobiliyatlarini yuzaga chiqarish hamda xalqaro
+                maydonda raqobatbardosh kadrlarni tayyorlashni maqsad qilganmiz.
+            </p>
+
+            <!-- Rasmiy guvohnomadan olingan haqiqiy ma'lumotlar -->
+            <div class="about-stats">
+                <div class="stat-card">
+                    <i class="fa-solid fa-building-shield"></i>
+                    <h3>Tashkiliy-huquqiy shakli</h3>
+                    <p><strong>DAVLAT MUASSASASI</strong> maqomiga ega bo'lgan rasmiy ixtisoslashtirilgan ta'lim
+                        maskani.</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <h3>Ro'yxatdan o'tgan sana</h3>
+                    <p>Ushbu ta'lim muassasasi rasman <strong>21.09.2022 yil</strong> sanasida davlat ro'yxatidan
+                        o'tkazilgan.</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <h3>Rasmiy yuridik manzil</h3>
+                    <p>Toshkent viloyati, Parkent tumani, Parkent shahri, Istiqbol MFY, A.Navoiy ko'chasi.</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <h3>Berilgan organ va raqam</h3>
+                    <p>Parkent tumani Davlat xizmatlari markazi tomonidan tasdiqlangan (Reyestr raqami: 1970257).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- O'ng tomon: Maktab rasmi joylashadigan vizual blok -->
+        <div class="about-right">
+            <div class="about-image-wrapper">
+                <img src="maktab-binosi.jpg" alt="Parkent ixtisoslashtirilgan maktabi binosi" class="school-main-img">
+            </div>
+            <div class="floating-badge">
+                <i class="fa-solid fa-award" style="font-size: 20px;"></i>
+                <span>Guvohnoma asosida faoliyat yuritadi</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER QISMI (BARCHA XATOLIKLAR TUZATILGAN VARIANTI) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <img src="logo1.png" alt="PTM Logo" class="footer-logo">
+                    <p>Parkent tuman ixtisoslashtirilgan maktabi — kelajak bunyodkorlarini tarbiyalaymiz.</p>
+                    <div class="footer-social">
+                        <a href="https://t.me/Parkent_tuman_IM" aria-label="Telegram"><i
+                                class="fa-brands fa-telegram"></i></a>
+                        <a href="https://www.facebook.com/groups/1553604381759572/" aria-label="Facebook"><i
+                                class="fa-brands fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/parkent_pima?igsh=bjkyZnc2MXpzNGkz" aria-label="Instagram"><i
+                                class="fa-brands fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/@PIMAParkent" aria-label="Youtube"><i
+                                class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Tezkor havolalar</h4>
+                    <ul>
+                        <li><a href="index.html">Bosh sahifa</a></li>
+                        <li><a href="index.html#about">Maktab haqida</a></li>
+                        <li><a href="oqituvchilar.html">O'qituvchilar</a></li>
+                        <li><a href="songgi-yangiliklar.html">Yangiliklar</a></li>
+                        <li><a href="index.html#schedule">Dars jadvali</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-contact">
+                    <h4>Aloqa</h4>
+                    <p><i class="fa-solid fa-phone"></i> +998 99 612 51 80</p>
+                    <p><i class="fa-solid fa-envelope"></i> pimaparkent@gmail.com</p>
+                </div>
+
+                <!-- Google Maps Embed To'liq tuzatildi -->
+                <div class="footer-map">
+                    <h4>Bizning joylashuv</h4>
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2997.3193109131016!2d69.63802437653973!3d41.30191670129159!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38ae5592bf11a1d9%3A0x277e3f44cda5b2fd!2sIxtisoslashgan%20maktab!5e0!3m2!1sru!2s!4v1779793563675!5m2!1sru!2s"
+                        width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2026 Parkent tuman ixtisoslashtirilgan maktabi. Barcha huquqlar himoyalangan.</p>
+                <h3>Dasturchi: <a href="https://t.me/Ziyaviddinov_Ilxom"
+                        style="color: #ffb703; text-decoration: none;">Ilxom Ziyaviddinov</a></h3>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MOBIL QURILMALAR UCHUN JAVASCRIPT LOGIKASI -->
+    <script>
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const navMenu = document.getElementById('navMenu');
+
+        hamburgerBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+        dropdownToggles.forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
+                if (window.innerWidth <= 1440) {
+                    e.preventDefault();
+                    const megaMenu = toggle.nextElementSibling;
+                    megaMenu.classList.toggle('open');
+
+                    const icon = toggle.querySelector('i');
+                    if (megaMenu.classList.contains('open')) {
+                        icon.style.transform = 'rotate(180deg)';
+                    } else {
+                        icon.style.transform = 'rotate(0deg)';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

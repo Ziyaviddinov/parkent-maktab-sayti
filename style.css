@@ -1,0 +1,1788 @@
+/* ===== CSS O'ZGARUVCHILARI ===== */
+:root {
+    --parkent-blue: #0a1d37;
+    --parkent-gold: #ffb100;
+    --parkent-gold-light: rgba(255, 177, 0, 0.15);
+    --text-dark: #333;
+    --text-muted: #666;
+    --bg-light: #f8f9fa;
+    --white: #ffffff;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.12);
+    --transition: 0.3s ease;
+}
+
+/* ===== UMUMIY STILLAR ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text-dark);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.section-badge {
+    display: inline-block;
+    background: var(--parkent-gold-light);
+    color: var(--parkent-gold);
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+    background-color: var(--parkent-blue);
+    height: 90px;
+    display: flex;
+    align-items: center;
+    border-bottom: 3px solid var(--parkent-gold);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    width: 95%;
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-wrapper {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.nav-logo {
+    height: 65px;
+    width: auto;
+}
+
+.logo-divider {
+    width: 2px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.3);
+    margin: 0 15px;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+
+.brand-name {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    line-height: 1;
+}
+
+.brand-sub {
+    font-size: 0.75rem;
+    color: var(--parkent-gold);
+    font-weight: 500;
+}
+
+/* Hamburger menyu */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.hamburger span {
+    width: 28px;
+    height: 3px;
+    background: white;
+    border-radius: 2px;
+    transition: var(--transition);
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 35px;
+    align-items: center;
+}
+
+.nav-menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.nav-menu a:hover,
+.nav-menu a.active {
+    color: var(--parkent-gold);
+}
+
+.btn-yellow {
+    background-color: var(--parkent-gold);
+    color: var(--parkent-blue);
+    padding: 12px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: var(--transition);
+    box-shadow: 0 4px 15px rgba(255, 177, 0, 0.2);
+}
+
+.btn-yellow:hover {
+    background-color: white;
+    transform: translateY(-2px);
+}
+
+/* ===== HERO ===== */
+.hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 600px;
+    background: url('maktab.jpg') no-repeat center 20%;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    filter: contrast(1.1) brightness(0.9);
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+    padding: 0 20px;
+}
+
+.hero-content h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.8);
+    margin-bottom: 20px;
+    margin-top: 50px;
+}
+
+.hero-content p {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    max-width: 700px;
+    margin: 0 auto 30px auto;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+.hero-btns {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.btn-primary {
+    background: var(--parkent-gold);
+    color: var(--parkent-blue);
+    padding: 14px 32px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 700;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn-secondary {
+    border: 2px solid var(--parkent-gold);
+    color: var(--parkent-gold);
+    padding: 12px 30px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 700;
+    transition: var(--transition);
+}
+
+.btn-primary:hover,
+.btn-secondary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(255, 177, 0, 0.3);
+}
+
+.btn-full {
+    width: 100%;
+}
+
+/* ===== STATISTIKA ===== */
+.stats-section {
+    padding: 80px 0;
+    background-color: var(--bg-light);
+    text-align: center;
+}
+
+.stats-title {
+    font-size: 2rem;
+    color: var(--text-dark);
+    margin-bottom: 50px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.stat-card {
+    background: var(--white);
+    padding: 40px 20px;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    transition: transform var(--transition), box-shadow var(--transition);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+.stat-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-hover);
+}
+
+.stat-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: var(--parkent-blue);
+}
+
+.stat-card h3 {
+    font-size: 2.5rem;
+    color: var(--parkent-blue);
+    margin-bottom: 10px;
+    font-weight: 800;
+}
+
+.stat-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* ===== MAKTAB HAQIDA ===== */
+.about-section {
+    padding: 100px 0;
+    background: var(--white);
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.about-content h2 {
+    font-size: 2.2rem;
+    color: var(--parkent-blue);
+    margin-bottom: 15px;
+}
+
+.about-content p {
+    margin-bottom: 20px;
+    color: var(--text-muted);
+}
+
+.about-list {
+    list-style: none;
+}
+
+.about-list li {
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-dark);
+}
+
+.about-list i {
+    color: var(--parkent-gold);
+    font-size: 1.2rem;
+}
+
+.about-image-wrapper {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-hover);
+}
+
+.about-image-wrapper img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+}
+
+/* ===== AFZALLIKLAR ===== */
+.features {
+    padding: 100px 0;
+    background: var(--bg-light);
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-title h2 {
+    font-size: 2rem;
+    color: var(--parkent-blue);
+}
+
+.underline {
+    width: 80px;
+    height: 4px;
+    background: var(--parkent-gold);
+    margin: 10px auto;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.feature-card {
+    background: var(--white);
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    transition: var(--transition);
+    border-bottom: 4px solid transparent;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    border-bottom-color: var(--parkent-gold);
+    box-shadow: var(--shadow-hover);
+}
+
+.feature-card .icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: var(--parkent-blue);
+}
+
+.feature-card h3 {
+    margin-bottom: 15px;
+    color: var(--parkent-blue);
+    font-size: 1.3rem;
+}
+
+.feature-card p {
+    color: var(--text-muted);
+}
+
+/* ===== O'QITUVCHILAR ===== */
+.teachers-section {
+    padding: 100px 0;
+    background: var(--bg-light);
+}
+
+.teachers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.teacher-card {
+    background: var(--white);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.teacher-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+}
+
+.teacher-image {
+    height: 280px;
+    background: linear-gradient(135deg, var(--parkent-blue), #1a3a5c);
+    position: relative;
+    overflow: hidden;
+}
+
+.teacher-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.teacher-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--parkent-blue), #1a3a5c);
+    color: var(--parkent-gold);
+    font-size: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.teacher-info {
+    padding: 25px;
+}
+
+.teacher-info h3 {
+    font-size: 1.1rem;
+    color: var(--parkent-blue);
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.teacher-subject {
+    color: var(--parkent-gold);
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+}
+
+.teacher-exp {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.teachers-cta {
+    text-align: center;
+}
+
+.teachers-cta .btn-primary i {
+    margin-left: 8px;
+}
+
+.teachers-page-section {
+    padding: 120px 0 80px;
+    background: var(--bg-light);
+}
+
+.teachers-page-section .section-title p {
+    color: var(--text-muted);
+    margin-top: 15px;
+}
+
+.teachers-page-grid {
+    margin-bottom: 50px;
+}
+
+.teachers-back {
+    text-align: center;
+}
+
+.teachers-back .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ===== YANGILIKLAR (YANGILANGAN) ===== */
+.news-section {
+    padding: 100px 0;
+    background: var(--bg-light);
+}
+
+/* Filtrlash paneli */
+.news-filter-bar {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+
+.news-filter-btn {
+    padding: 8px 22px;
+    border: 2px solid var(--parkent-blue);
+    background: transparent;
+    color: var(--parkent-blue);
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: 'Inter', sans-serif;
+}
+
+.news-filter-btn:hover,
+.news-filter-btn.active {
+    background: var(--parkent-blue);
+    color: white;
+}
+
+/* Katta yangilik + yon qator */
+.news-featured-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 25px;
+    margin-bottom: 30px;
+    align-items: stretch;
+}
+
+/* Katta yangilik kartasi */
+.news-featured-card {
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: var(--shadow-hover);
+    transition: var(--transition);
+}
+
+.news-featured-card:hover {
+    transform: translateY(-5px);
+}
+
+.news-featured-img {
+    position: relative;
+    height: 100%;
+    min-height: 420px;
+    background: linear-gradient(135deg, var(--parkent-blue), #1a3a5c);
+    overflow: hidden;
+}
+
+.news-featured-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.news-featured-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 30px 25px 25px;
+    background: linear-gradient(transparent, rgba(10, 29, 55, 0.97));
+    color: white;
+    z-index: 2;
+}
+
+.news-featured-overlay h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 10px 0 10px;
+    line-height: 1.4;
+    color: white;
+}
+
+.news-featured-overlay p {
+    font-size: 0.92rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 18px;
+    line-height: 1.6;
+}
+
+.news-meta-row {
+    display: flex;
+    gap: 20px;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.65);
+    margin-bottom: 12px;
+}
+
+.news-meta-row i {
+    color: var(--parkent-gold);
+    margin-right: 4px;
+}
+
+.news-read-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--parkent-gold);
+    color: var(--parkent-blue);
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.news-read-more:hover {
+    background: white;
+    gap: 12px;
+}
+
+/* Yon kichik yangiliklar */
+.news-side-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.news-side-card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    gap: 16px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    border-left: 4px solid transparent;
+    flex: 1;
+}
+
+.news-side-card:hover {
+    transform: translateX(5px);
+    box-shadow: var(--shadow-hover);
+    border-left-color: var(--parkent-gold);
+}
+
+.news-side-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.hamkorlik-icon {
+    background: rgba(10, 29, 55, 0.1);
+    color: var(--parkent-blue);
+}
+
+.olimpiada-icon {
+    background: rgba(255, 177, 0, 0.15);
+    color: #c88a00;
+}
+
+.tadbir-icon {
+    background: rgba(10, 29, 55, 0.08);
+    color: var(--parkent-blue);
+}
+
+.sport-icon {
+    background: rgba(255, 177, 0, 0.12);
+    color: #c88a00;
+}
+
+.news-side-body {
+    flex: 1;
+}
+
+.news-side-body h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--parkent-blue);
+    margin: 5px 0 7px;
+    line-height: 1.4;
+}
+
+.news-side-body p {
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 10px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.news-side-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.news-side-meta a {
+    color: var(--parkent-gold);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: var(--transition);
+}
+
+.news-side-meta a:hover {
+    gap: 8px;
+}
+
+.news-side-meta i {
+    color: var(--parkent-gold);
+    margin-right: 4px;
+}
+
+/* Kategoriya badge'lari */
+.news-cat-badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.olimpiada-badge {
+    background: rgba(255, 177, 0, 0.18);
+    color: #a07000;
+}
+
+.hamkorlik-badge {
+    background: rgba(10, 29, 55, 0.12);
+    color: var(--parkent-blue);
+}
+
+.tadbir-badge {
+    background: rgba(26, 58, 92, 0.12);
+    color: #1a3a5c;
+}
+
+.sport-badge {
+    background: rgba(255, 177, 0, 0.15);
+    color: #9a6800;
+}
+
+/* Pastdagi 3 ta karta */
+.news-grid-bottom {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-bottom: 40px;
+}
+
+.news-card-new {
+    background: var(--white);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.news-card-new:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+}
+
+.news-card-top {
+    height: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.8rem;
+    position: relative;
+    color: white;
+}
+
+.sport-bg {
+    background: linear-gradient(135deg, #0a1d37, #1a3a5c);
+    color: var(--parkent-gold);
+}
+
+.tadbir-bg {
+    background: linear-gradient(135deg, #ffb100, #e09600);
+    color: var(--parkent-blue);
+}
+
+.olimpiada2-bg {
+    background: linear-gradient(135deg, #0d2545, #0a1d37);
+    color: var(--parkent-gold);
+}
+
+.news-date-corner {
+    position: absolute;
+    bottom: 12px;
+    right: 14px;
+    font-size: 0.75rem;
+    opacity: 0.85;
+    font-weight: 500;
+}
+
+.news-card-body {
+    padding: 20px 22px;
+}
+
+.news-card-body h4 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--parkent-blue);
+    margin: 8px 0 10px;
+    line-height: 1.4;
+}
+
+.news-card-body p {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin-bottom: 14px;
+}
+
+.news-link {
+    color: var(--parkent-gold);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.news-link:hover {
+    gap: 13px;
+}
+
+/* CTA */
+.news-cta {
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* hidden via filter */
+.news-hidden {
+    display: none !important;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .news-featured-row {
+        grid-template-columns: 1fr;
+    }
+
+    .news-featured-img {
+        min-height: 300px;
+    }
+
+    .news-side-list {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .news-side-card {
+        min-width: 260px;
+        flex: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .news-grid-bottom {
+        grid-template-columns: 1fr;
+    }
+
+    .news-side-list {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .news-filter-bar {
+        gap: 7px;
+    }
+
+    .news-filter-btn {
+        padding: 7px 14px;
+        font-size: 0.8rem;
+    }
+}
+
+/* ===== DARS JADVALI ===== */
+.schedule-section {
+    padding: 100px 0;
+    background: var(--parkent-blue);
+}
+
+.schedule-section .section-title h2 {
+    color: white;
+}
+
+.schedule-section .section-title p {
+    color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.schedule-section .section-badge {
+    background: rgba(255, 177, 0, 0.2);
+    color: var(--parkent-gold);
+}
+
+.schedule-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.schedule-tabs-class .schedule-tab {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+}
+
+.schedule-tabs-day {
+    margin-bottom: 30px;
+}
+
+.schedule-tabs-day .schedule-day-tab {
+    padding: 10px 18px;
+    font-size: 0.95rem;
+}
+
+.schedule-tab {
+    padding: 12px 30px;
+    border: 2px solid var(--parkent-gold);
+    background: transparent;
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.schedule-tab:hover,
+.schedule-tab.active {
+    background: var(--parkent-gold);
+    color: var(--parkent-blue);
+}
+
+.schedule-day-tab {
+    padding: 10px 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.85);
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.schedule-day-tab:hover,
+.schedule-day-tab.active {
+    background: var(--parkent-gold);
+    border-color: var(--parkent-gold);
+    color: var(--parkent-blue);
+}
+
+.schedule-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.schedule-table {
+    display: none;
+    background: var(--white);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.schedule-table.active {
+    display: block;
+}
+
+.schedule-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.schedule-table th,
+.schedule-table td {
+    padding: 15px 20px;
+    text-align: left;
+}
+
+.schedule-table th {
+    background: var(--parkent-blue);
+    color: white;
+    font-weight: 600;
+}
+
+.schedule-table tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.schedule-table tr:hover {
+    background: var(--parkent-gold-light);
+}
+
+/* ===== BOG'LANISH ===== */
+.contact-section {
+    padding: 100px 0;
+    background: var(--bg-light);
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+}
+
+.contact-info h2 {
+    font-size: 2rem;
+    color: var(--parkent-blue);
+    margin-bottom: 15px;
+}
+
+.contact-info>p {
+    margin-bottom: 30px;
+    color: var(--text-muted);
+}
+
+.contact-items {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.contact-item {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.contact-item i {
+    font-size: 1.5rem;
+    color: var(--parkent-gold);
+    margin-top: 5px;
+}
+
+.contact-item strong {
+    display: block;
+    color: var(--parkent-blue);
+    margin-bottom: 5px;
+}
+
+.contact-item p {
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.contact-form input,
+.contact-form textarea {
+    padding: 15px 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: var(--transition);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: var(--parkent-gold);
+}
+
+/* ===== FOOTER ===== */
+.footer {
+    background: var(--parkent-blue);
+    color: white;
+    padding: 60px 0 0;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 50px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-logo {
+    height: 60px;
+    margin-bottom: 15px;
+}
+
+.footer-brand p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 20px;
+    max-width: 300px;
+}
+
+.footer-social {
+    display: flex;
+    gap: 15px;
+}
+
+.footer-social a {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: var(--transition);
+}
+
+.footer-social a:hover {
+    background: var(--parkent-gold);
+    transform: translateY(-3px);
+}
+
+.footer-links h4,
+.footer-contact h4 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: var(--parkent-gold);
+}
+
+.footer-links ul {
+    list-style: none;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    display: block;
+    padding: 8px 0;
+    transition: var(--transition);
+}
+
+.footer-links a:hover {
+    color: var(--parkent-gold);
+}
+
+.footer-contact p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-bottom {
+    padding: 25px 0;
+    text-align: center;
+}
+
+.footer-bottom p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 992px) {
+
+    .about-grid,
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-image {
+        order: -1;
+    }
+
+    .about-image-wrapper img {
+        height: 300px;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-menu {
+        position: fixed;
+        top: 90px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 90px);
+        background: var(--parkent-blue);
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 40px;
+        gap: 0;
+        transition: var(--transition);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-menu.active {
+        left: 0;
+    }
+
+    .nav-menu li {
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-menu a {
+        display: block;
+        padding: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .hero-content h1 {
+        margin-top: 20px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .footer-brand p {
+        max-width: none;
+    }
+
+    .footer-social {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-btns {
+        flex-direction: column;
+    }
+
+    .hero-btns a {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* ===== YANGI DARS JADVALI STILLARI ===== */
+.schedule-ui {
+    margin-top: 10px;
+}
+
+.schedule-tabs-letter {
+    margin-bottom: 15px;
+    justify-content: center;
+    gap: 8px;
+}
+
+.schedule-tabs-letter .schedule-tab {
+    padding: 8px 18px;
+    font-size: 0.9rem;
+}
+
+.schedule-header-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.sched-class-label {
+    background: white;
+    color: var(--parkent-blue);
+    padding: 6px 18px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.sched-day-label {
+    background: var(--parkent-gold);
+    color: var(--parkent-blue);
+    padding: 6px 18px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.sched-count {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+}
+
+.schedule-table-main {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.schedule-table-main th {
+    background: var(--parkent-gold);
+    color: var(--parkent-blue);
+    padding: 14px 18px;
+    text-align: left;
+    font-weight: 700;
+}
+
+.schedule-table-main td {
+    padding: 13px 18px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.schedule-table-main tr:last-child td {
+    border-bottom: none;
+}
+
+.schedule-table-main tr:nth-child(even) td {
+    background: #f8f9fa;
+}
+
+.schedule-table-main tr:hover td {
+    background: var(--parkent-gold-light);
+}
+
+.td-num {
+    font-weight: 700;
+    color: var(--parkent-blue);
+    width: 40px;
+    text-align: center;
+}
+
+.td-time {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    white-space: nowrap;
+    min-width: 130px;
+}
+
+.td-subject {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.td-room {
+    text-align: right;
+}
+
+.room-badge {
+    background: var(--parkent-gold-light);
+    color: var(--parkent-blue);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+    .td-time {
+        font-size: 0.78rem;
+        min-width: 100px;
+    }
+
+    .td-subject {
+        font-size: 0.9rem;
+    }
+
+    .schedule-table-main th,
+    .schedule-table-main td {
+        padding: 10px 12px;
+    }
+}
+
+/* ===== VIDEO YANGILIKLAR ===== */
+.news-video-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-bottom: 40px;
+}
+
+.news-video-card {
+    background: var(--white);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.news-video-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+}
+
+.news-video-thumb {
+    position: relative;
+    height: 180px;
+    background: #0a1d37;
+    overflow: hidden;
+}
+
+.vid-thumb-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Play tugmasi */
+.vid-play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 56px;
+    height: 56px;
+    background: rgba(255, 177, 0, 0.92);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0a1d37;
+    font-size: 1.3rem;
+    transition: var(--transition);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+.news-video-card:hover .vid-play-btn {
+    transform: translate(-50%, -50%) scale(1.12);
+    background: var(--parkent-gold);
+}
+
+.vid-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+}
+
+.video-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    box-sizing: border-box;
+}
+
+.video-modal-box {
+    position: relative;
+    background: #0a1628;
+    border-radius: 14px;
+    padding: 50px 20px 20px 20px;
+    width: 90%;
+    max-width: 700px;
+    box-sizing: border-box;
+}
+
+.video-modal-title {
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.video-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    line-height: 1;
+}
+
+.video-modal-close:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+#modalYoutube {
+    width: 100%;
+    height: 400px;
+    border-radius: 10px;
+    border: none;
+}
+
+/* Responsive video */
+@media (max-width: 900px) {
+    .news-video-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    .news-video-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Vertikal video o'lchamini cheklash */
+#modalVideo {
+    max-height: 70vh;
+    object-fit: contain;
+    background: #000;
+}
+
+/* ===== OCHIQ ESHIKLAR KUNI BANNERI ===== */
+.open-day-section {
+    background: var(--parkent-blue);
+    padding: 50px 0;
+}
+
+.open-day-banner {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid rgba(255, 177, 0, 0.35);
+    border-radius: 20px;
+    padding: 36px 40px;
+}
+
+.open-day-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+    padding-right: 40px;
+}
+
+.open-day-icon {
+    font-size: 3.5rem;
+    line-height: 1;
+}
+
+.open-day-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--parkent-gold);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.open-day-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: white;
+    line-height: 1.2;
+    margin: 0 0 6px;
+}
+
+.open-day-sub {
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.65);
+    margin: 0;
+}
+
+/* O'rta: sanalar */
+.open-day-center {
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+    padding-right: 40px;
+}
+
+.open-day-dates {
+    margin-bottom: 16px;
+}
+
+.open-day-date-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+    padding: 5px 0;
+}
+
+.open-day-date-row strong {
+    color: var(--parkent-gold);
+}
+
+.od-icon {
+    font-size: 1.1rem;
+}
+
+.open-day-classes {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.od-badge {
+    background: rgba(255, 177, 0, 0.15);
+    color: var(--parkent-gold);
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* O'ng: yo'nalishlar */
+.od-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.od-feat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.88rem;
+    background: rgba(255, 255, 255, 0.07);
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+.od-feat span {
+    font-size: 1.1rem;
+}
+
+.od-tg-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #229ED9;
+    color: white;
+    padding: 11px 22px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.92rem;
+    transition: var(--transition);
+    width: 100%;
+    justify-content: center;
+}
+
+.od-tg-btn:hover {
+    background: #1a8bbf;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .open-day-banner {
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+    }
+
+    .open-day-left {
+        grid-column: 1 / -1;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        padding-right: 0;
+        padding-bottom: 25px;
+    }
+
+    .open-day-center {
+        border-right: none;
+        padding-right: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .open-day-banner {
+        grid-template-columns: 1fr;
+        padding: 24px 20px;
+    }
+
+    .open-day-left {
+        grid-column: auto;
+    }
+
+    .open-day-title {
+        font-size: 1.3rem;
+    }
+
+    .od-features {
+        grid-template-columns: 1fr;
+    }
+}
