@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - Parkent Maktabi</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root {
+    --blue: #0b2545;
+    --yellow: #ffb703;
+    --bg: #f4f6f9;
+    --white: #ffffff;
+    --danger: #e63946;
+    --text: #1a1a1a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  header {
+    background: var(--blue);
+    color: white;
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header h1 { font-size: 1.2rem; }
+  header button {
+    background: var(--yellow);
+    color: var(--blue);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .container { max-width: 900px; margin: 0 auto; padding: 24px; }
+
+  /* Login */
+  #loginScreen {
+    max-width: 380px;
+    margin: 80px auto;
+    background: var(--white);
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  #loginScreen h2 { color: var(--blue); margin-bottom: 20px; text-align: center; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; margin-bottom: 6px; font-size: 0.9rem; font-weight: 600; color: var(--blue); }
+  .field input, .field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+  .field textarea { min-height: 100px; resize: vertical; }
+  .btn-primary {
+    width: 100%;
+    background: var(--blue);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-primary:hover { opacity: 0.9; }
+  .error-msg { color: var(--danger); font-size: 0.85rem; margin-top: 10px; text-align: center; }
+
+  /* App */
+  #appScreen { display: none; }
+  .card-form {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  }
+  .card-form h3 { color: var(--blue); margin-bottom: 16px; }
+  .news-list { display: grid; gap: 14px; }
+  .news-item {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    gap: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .news-item img { width: 90px; height: 90px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+  .news-item .no-img {
+    width: 90px; height: 90px; border-radius: 8px; flex-shrink: 0;
+    background: var(--bg); display: flex; align-items: center; justify-content: center;
+    color: #999; font-size: 0.75rem; text-align: center;
+  }
+  .news-content { flex: 1; }
+  .news-content h4 { color: var(--blue); margin-bottom: 6px; }
+  .news-content p { font-size: 0.9rem; color: #555; }
+  .news-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .news-actions button {
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .btn-edit { background: var(--yellow); color: var(--blue); }
+  .btn-delete { background: var(--danger); color: white; }
+  .status-msg { margin-top: 12px; font-size: 0.9rem; }
+  .status-msg.success { color: #2a9d8f; }
+  .status-msg.error { color: var(--danger); }
+  #apiUrlNote { font-size: 0.8rem; color: #888; margin-top: 10px; text-align: center; }
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <h2>🔐 Admin kirish</h2>
+  <div class="field">
+    <label>Login</label>
+    <input type="text" id="loginUsername" autocomplete="username">
+  </div>
+  <div class="field">
+    <label>Parol</label>
+    <input type="password" id="loginPassword" autocomplete="current-password">
+  </div>
+  <button class="btn-primary" onclick="doLogin()">Kirish</button>
+  <div class="error-msg" id="loginError"></div>
+  <div id="apiUrlNote">Server: <span id="apiUrlDisplay"></span></div>
+</div>
+
+<div id="appScreen">
+  <header>
+    <h1>📰 Yangiliklar boshqaruvi — Parkent maktabi</h1>
+    <button onclick="logout()">Chiqish</button>
+  </header>
+  <div class="container">
+
+    <div class="card-form">
+      <h3 id="formTitle">Yangi yangilik qo'shish</h3>
+      <div class="field">
+        <label>Sarlavha</label>
+        <input type="text" id="newsTitle" placeholder="Masalan: Yangi sport zali ochildi">
+      </div>
+      <div class="field">
+        <label>Matn</label>
+        <textarea id="newsText" placeholder="Yangilik matni..."></textarea>
+      </div>
+      <div class="field">
+        <label>Rasm</label>
+        <input type="file" id="newsImage" accept="image/*">
+      </div>
+      <button class="btn-primary" onclick="submitNews()" id="submitBtn">Qo'shish</button>
+      <button class="btn-primary" style="background:#888; margin-top:8px; display:none;" id="cancelEditBtn" onclick="cancelEdit()">Tahrirlashni bekor qilish</button>
+      <div class="status-msg" id="formStatus"></div>
+    </div>
+
+    <h3 style="color: var(--blue); margin-bottom: 14px;">Barcha yangiliklar</h3>
+    <div class="news-list" id="newsList"></div>
+
+  </div>
+</div>
+
+<script>
+// Backend server manzili - ishlab chiqarishga qo'yganda o'zgartiring
+const API_URL = 'http://localhost:3000';
+document.getElementById('apiUrlDisplay').textContent = API_URL;
+
+let token = localStorage.getItem('admin_token') || null;
+let editingId = null;
+
+function showApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'block';
+  loadNews();
+}
+
+function showLogin() {
+  document.getElementById('loginScreen').style.display = 'block';
+  document.getElementById('appScreen').style.display = 'none';
+}
+
+async function doLogin() {
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('loginError');
+  errEl.textContent = '';
+
+  try {
+    const res = await fetch(`${API_URL}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      errEl.textContent = data.error || 'Xatolik yuz berdi';
+      return;
+    }
+    token = data.token;
+    localStorage.setItem('admin_token', token);
+    showApp();
+  } catch (err) {
+    errEl.textContent = "Serverga ulanib bo'lmadi. Server manzilini tekshiring.";
+  }
+}
+
+function logout() {
+  token = null;
+  localStorage.removeItem('admin_token');
+  showLogin();
+}
+
+async function loadNews() {
+  const listEl = document.getElementById('newsList');
+  listEl.innerHTML = 'Yuklanmoqda...';
+  try {
+    const res = await fetch(`${API_URL}/api/news`);
+    const data = await res.json();
+    if (!data.news || data.news.length === 0) {
+      listEl.innerHTML = '<p style="color:#888;">Hozircha yangiliklar yo\'q.</p>';
+      return;
+    }
+    listEl.innerHTML = data.news.map(item => `
+      <div class="news-item">
+        ${item.image ? `<img src="${API_URL}${item.image}" alt="">` : `<div class="no-img">Rasm yo'q</div>`}
+        <div class="news-content">
+          <h4>${escapeHtml(item.title)}</h4>
+          <p>${escapeHtml(item.text).slice(0, 120)}${item.text.length > 120 ? '...' : ''}</p>
+          <div class="news-actions">
+            <button class="btn-edit" onclick='startEdit(${JSON.stringify(item.id)}, ${JSON.stringify(item.title)}, ${JSON.stringify(item.text)})'>Tahrirlash</button>
+            <button class="btn-delete" onclick="deleteNews('${item.id}')">O'chirish</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    listEl.innerHTML = '<p style="color:red;">Yuklashda xatolik.</p>';
+  }
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+function startEdit(id, title, text) {
+  editingId = id;
+  document.getElementById('newsTitle').value = title;
+  document.getElementById('newsText').value = text;
+  document.getElementById('formTitle').textContent = "Yangilikni tahrirlash";
+  document.getElementById('submitBtn').textContent = 'Saqlash';
+  document.getElementById('cancelEditBtn').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function cancelEdit() {
+  editingId = null;
+  document.getElementById('newsTitle').value = '';
+  document.getElementById('newsText').value = '';
+  document.getElementById('newsImage').value = '';
+  document.getElementById('formTitle').textContent = "Yangi yangilik qo'shish";
+  document.getElementById('submitBtn').textContent = "Qo'shish";
+  document.getElementById('cancelEditBtn').style.display = 'none';
+}
+
+async function submitNews() {
+  const title = document.getElementById('newsTitle').value.trim();
+  const text = document.getElementById('newsText').value.trim();
+  const imageFile = document.getElementById('newsImage').files[0];
+  const statusEl = document.getElementById('formStatus');
+  statusEl.textContent = '';
+  statusEl.className = 'status-msg';
+
+  if (!title || !text) {
+    statusEl.textContent = "Sarlavha va matnni to'ldiring";
+    statusEl.classList.add('error');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('title', title);
+  formData.append('text', text);
+  if (imageFile) formData.append('image', imageFile);
+
+  const url = editingId ? `${API_URL}/api/news/${editingId}` : `${API_URL}/api/news`;
+  const method = editingId ? 'PUT' : 'POST';
+
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      if (res.status === 401) { logout(); return; }
+      statusEl.textContent = data.error || 'Xatolik yuz berdi';
+      statusEl.classList.add('error');
+      return;
+    }
+    statusEl.textContent = editingId ? 'Yangilandi!' : "Qo'shildi!";
+    statusEl.classList.add('success');
+    cancelEdit();
+    loadNews();
+  } catch (err) {
+    statusEl.textContent = "Serverga ulanib bo'lmadi";
+    statusEl.classList.add('error');
+  }
+}
+
+async function deleteNews(id) {
+  if (!confirm("Rostdan ham o'chirmoqchimisiz?")) return;
+  try {
+    const res = await fetch(`${API_URL}/api/news/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (res.status === 401) { logout(); return; }
+    loadNews();
+  } catch (err) {
+    alert("O'chirishda xatolik yuz berdi");
+  }
+}
+
+// Sahifa yuklanganda token borligini tekshiramiz
+if (token) {
+  showApp();
+} else {
+  showLogin();
+}
+</script>
+</body>
+</html>
