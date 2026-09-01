@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Parkent tuman ixtisoslashtirilgan maktabi - Zamonaviy ta'lim va yuqori texnologiyalar uyg'unligi">
+    <meta name="keywords" content="Parkent, maktab, ta'lim, ixtisoslashtirilgan maktab">
+    <title>Parkent tuman ixtisoslashtirilgan maktabi</title>
+    <link rel="icon" type="image/x-icon" href="favicon_io/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
+        integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ============================================================
+           MEGA-MENU NAVIGATSIYA (boshqa ichki sahifalar bilan bir xil)
+        ============================================================ */
+        .nav-container {
+            position: relative;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            gap: 5px;
+        }
+
+        .nav-menu > li > a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 15px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu > li > a:hover,
+        .nav-menu > li > a.active {
+            color: #ffb703;
+        }
+
+        .nav-menu > li > a i {
+            font-size: 11px;
+            transition: transform 0.3s;
+        }
+
+        .nav-menu > li:hover > a i {
+            transform: rotate(180deg);
+        }
+
+        .mega-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(15px);
+            width: 95vw;
+            max-width: 1200px;
+            background-color: #0b2545;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-menu > li:hover .mega-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .mega-col h4 {
+            color: #ffb703;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .mega-col ul {
+            list-style: none;
+        }
+
+        .mega-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .mega-col ul li a {
+            color: #e2e8f0;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: block;
+        }
+
+        .mega-col ul li a:hover {
+            color: #fff;
+            padding-left: 5px;
+        }
+
+        @media (max-width: 1440px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: #0b2545;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px;
+                max-height: 80vh;
+                overflow-y: auto;
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .nav-menu > li {
+                width: 100%;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            }
+
+            .nav-menu > li > a {
+                justify-content: space-between;
+                padding: 15px 10px;
+                width: 100%;
+            }
+
+            .btn-yellow {
+                margin: 15px 10px 0 10px !important;
+                text-align: center;
+                display: block;
+            }
+
+            .mega-menu {
+                position: static;
+                transform: none !important;
+                left: auto !important;
+                width: 100% !important;
+                box-shadow: none;
+                padding: 10px 10px 20px 20px;
+                grid-template-columns: 1fr !important;
+                gap: 20px;
+                background-color: transparent;
+                display: none;
+                opacity: 1;
+                visibility: visible;
+                max-width: 100% !important;
+            }
+
+            .mega-menu.open {
+                display: grid;
+            }
+        }
+    </style>
+    <style>
+        #newsModal {
+            display: none;
+        }
+
+        #newsModal.active {
+            display: flex !important;
+        }
+
+        .video-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            padding: 20px;
+        }
+
+        .video-modal-box {
+            position: relative;
+            background: #0a1628;
+            border-radius: 14px;
+            padding: 20px;
+            width: 100%;
+            max-width: 750px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .video-modal-title {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 14px;
+            padding-right: 36px;
+        }
+
+        .video-modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .video-modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+
+        #loader-overlay {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: #0a1628 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 999999 !important;
+            overflow: hidden !important;
+            transition: opacity 0.7s ease !important;
+        }
+
+        #loader-overlay.hidden {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-ring 3s ease-in-out infinite;
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            animation-delay: 0s;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 440px;
+            height: 440px;
+            animation-delay: 0.4s;
+        }
+
+        .bg-circle:nth-child(3) {
+            width: 580px;
+            height: 580px;
+            animation-delay: 0.8s;
+        }
+
+        @keyframes pulse-ring {
+
+            0%,
+            100% {
+                opacity: 0.2
+            }
+
+            50% {
+                opacity: 0.6
+            }
+        }
+
+        .loader-logo {
+            width: 200px;
+            height: 80px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: logo-pop 0.6s ease 0.2s both;
+        }
+
+        .loader-logo img {
+            width: 200px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        @keyframes logo-pop {
+            from {
+                transform: scale(0.6);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .loader-school-name {
+            text-align: center;
+            animation: fade-up 0.7s ease 0.5s both;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .loader-school-name h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .loader-school-name p {
+            font-size: 12px;
+            color: #ffffff;
+            letter-spacing: 0.12em;
+            margin-top: 5px;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        @keyframes fade-up {
+            from {
+                transform: translateY(16px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .loader-progress-wrap {
+            margin-top: 32px;
+            width: 240px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            animation: fade-up 0.7s ease 0.8s both;
+        }
+
+        .loader-bar-bg {
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .loader-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: #ffffff;
+            border-radius: 2px;
+            transition: width 0.1s linear;
+        }
+
+        .loader-dots {
+            display: flex;
+            gap: 7px;
+        }
+
+        .loader-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            animation: dot-blink 1.2s ease-in-out infinite;
+        }
+
+        .loader-dot:nth-child(1) {
+            animation-delay: 0.0s;
+        }
+
+        .loader-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loader-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes dot-blink {
+
+            0%,
+            100% {
+                background: rgba(255, 255, 255, 0.3);
+                transform: scale(1);
+            }
+
+            50% {
+                background: #ffffff;
+                transform: scale(1.4);
+            }
+        }
+
+        .loader-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-family: 'Segoe UI', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loader-overlay">
+        <div style="position:absolute;inset:0;pointer-events:none">
+            <div class="bg-circle"></div>
+            <div class="bg-circle"></div>
+            <div class="bg-circle"></div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;align-items:center;gap:20px;z-index:2">
+
+            <div class="loader-logo">
+                <img src="logo1.png" alt="PTM Logo">
+            </div>
+
+            <div class="loader-school-name">
+                <h1>Parkent tuman</h1>
+                <p>Ixtisoslashtirilgan maktabi</p>
+            </div>
+
+            <div class="loader-progress-wrap">
+                <div class="loader-bar-bg">
+                    <div class="loader-bar-fill" id="progressFill"></div>
+                </div>
+                <div class="loader-dots">
+                    <div class="loader-dot"></div>
+                    <div class="loader-dot"></div>
+                    <div class="loader-dot"></div>
+                </div>
+                <div class="loader-label" id="loadingLabel">Yuklanmoqda...</div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo-wrapper">
+                <img src="logo1.png" alt="PTM Logo" class="nav-logo">
+                <div class="logo-divider"></div>
+                <div class="logo-text">
+                    <span class="brand-name">PARKENT</span>
+                    <span class="brand-sub">SPECIALIZED SCHOOL</span>
+                </div>
+            </a>
+
+            <button class="hamburger" id="hamburgerBtn" aria-label="Menyuni ochish">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#" class="active">Bosh sahifa</a></li>
+
+                <!-- DROPDOWN 1: BIZ HAQIMIZDA -->
+                <li class="dropdown-item">
+                    <a href="#" class="dropdown-toggle">Biz haqimizda <i class="fa-solid fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-col">
+                            <h4>Rahbariyat</h4>
+                            <ul>
+                                <li><a href="direktor-qutlovi.html">Direktor qutlovi</a></li>
+                                <li><a href="rahbariyat.html">Rahbariat tarkibi</a></li>
+                                <li><a href="kuzatuv-kengashi.html">Kuzatuv kengashi</a></li>
+                            </ul>
+                        </div>
+                        <div class="mega-col">
+                            <h4>Umumiy ma'lumot</h4>
+                            <ul>
+                                <li><a href="#about">Maktab haqida</a></li>
+                                <li><a href="maktab-broshyurasi.html">Maktab broshyurasi</a></li>
+                                <li><a href="ochiq-malumotlar.html">Ochiq ma'lumotlar</a></li>
+                            </ul>
+                        </div>
+                        <div class="mega-col">
+                            <h4>Jamoatchilik</h4>
+                            <ul>
+                                <li><a href="oquvchi-ovozi.html">O'quvchi ovozi</a></li>
+                                <li><a href="xodimlarimiz.html">Xodimlarimiz</a></li>
+                                <li><a href="vakansiyalar.html">Vakansiyalar</a></li>
+                            </ul>
+                        </div>
+                        <div class="mega-col">
+                            <h4>Xavfsizlik</h4>
+                            <ul>
+                                <li><a href="oquvchilar-himoyasi.html">O'quvchilar himoyasi</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- DROPDOWN 2: TA'LIM -->
+                <li class="dropdown-item">
+                    <a href="#" class="dropdown-toggle">Ta'lim <i class="fa-solid fa-chevron-down"></i></a>
+                    <div class="mega-menu" style="grid-template-columns: repeat(3, 1fr); max-width: 700px;">
+                        <div class="mega-col">
+                            <h4>Dasturlar</h4>
+                            <ul>
+                                <li><a href="ib-dasturi.html">Xalqaro Bakalavriat (IB)</a></li>
+                            </ul>
+                        </div>
+                        <div class="mega-col">
+                            <h4>Qabul</h4>
+                            <ul>
+                                <li><a href="qabul-jarayoni.html">Qabul jarayoni 2026-2027</a></li>
+                                <li><a href="qabul-imtihonlari.html">Qabul imtihonlari</a></li>
+                                <li><a href="qabul-siyosati.html">Qabul siyosati</a></li>
+                            </ul>
+                        </div>
+                        <div class="mega-col">
+                            <h4>Imkoniyatlar</h4>
+                            <ul>
+                                <li><a href="savollar.html">Ko'p beriladigan savollar</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- DROPDOWN 3: MASHG'ULOTLAR -->
+                <li class="dropdown-item">
+                    <a href="#" class="dropdown-toggle">Mashg'ulotlar <i class="fa-solid fa-chevron-down"></i></a>
+                    <div class="mega-menu" style="grid-template-columns: repeat(4, 1fr); max-width: 900px;">
+                        <div class="mega-col">
+                            <h4>Mashg'ulotlar</h4>
+                            <ul>
+                                <li><a href="bilim-nazariyasi.html">Bilim nazariyasi</a></li>
+                                <li><a href="ijodkorlik-faoliyat-xizmat.html">Ijodkorlik, Faoliyat, Xizmat</a></li>
+                                <li><a href="insho-yozish-sanati.html">Insho yozish san'ati</a></li>
+                                <li><a href="sport.html">Sport</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- DROPDOWN 4: YORDAM XIZMATI -->
+                <li class="dropdown-item">
+                    <a href="#" class="dropdown-toggle">Yordam xizmati <i class="fa-solid fa-chevron-down"></i></a>
+                    <div class="mega-menu" style="grid-template-columns: repeat(3, 1fr); max-width: 700px;">
+                        <div class="mega-col">
+                            <h4>Yordam xizmati</h4>
+                            <ul>
+                                <li><a href="maslahat-xizmati.html">Maslahat xizmati</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+
+                <li><a href="oqituvchilar.html">O'qituvchilar</a></li>
+
+                <!-- DROPDOWN 5: XABARLAR -->
+                <li class="dropdown-item">
+                    <a href="#" class="dropdown-toggle">Xabarlar <i class="fa-solid fa-chevron-down"></i></a>
+                    <div class="mega-menu" style="grid-template-columns: repeat(2, 1fr); max-width: 500px;">
+                        <div class="mega-col">
+                            <h4>Xabarlar</h4>
+                            <ul>
+                                <li><a href="songgi-yangiliklar.html">So'nggi yangiliklar</a></li>
+                                <li><a href="kutilayotgan-tadbirlar.html">Kutilayotgan tadbirlar</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+
+                <li><a href="#schedule">Dars jadvali</a></li>
+                <li><a href="#contact" class="btn-yellow">Bog'lanish</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Parkent tuman ixtisoslashtirilgan maktabi</h1>
+            <p>Kelajak bunyodkorlari bizning dargohda kamol topadi. Zamonaviy ta'lim va yuqori texnologiyalar
+                uyg'unligi.</p>
+            <div class="hero-btns">
+                <a href="#about" class="btn-primary">Batafsil ma'lumot</a>
+                <a href="https://ariza.piima.uz/" class="btn-secondary">Imtihon topshirish</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="container">
+            <h2 class="stats-title">MAKTAB STATISTIKASI</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+                    <h3>500+</h3>
+                    <p>O'quvchilar</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-person-chalkboard"></i></div>
+                    <h3>50+</h3>
+                    <p>O'qituvchilar</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-book"></i></div>
+                    <h3>15+</h3>
+                    <p>To'garaklar</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-building-columns"></i></div>
+                    <h3>100%</h3>
+                    <p>OTM ga kirish ko'rsatkichi</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-content">
+                    <span class="section-badge">Maktab haqida</span>
+                    <h2>Bizning maktab - sizning kelajagingiz!</h2>
+                    <div class="underline"></div>
+                    <p>Parkent Ixtisoslashtirilgan maktabi 2022-yil sentabr oyida tashkil topgan bo'lib,
+                        O'zbekiston Respublikasi Ixtisoslashtirilgan ta'lim muassasalari agentligi tasarrufida
+                        faoliyat yuritadi. Hozirgi kunda maktabimizda 460 nafardan ortiq o'quvchi tahsil olmoqda.</p>
+                    <p>O'quv jarayoni aniq va tabiiy fanlarga ixtisoslashtirilgan holda tashkil etilgan bo'lib,
+                        bu o'quvchilarning matematika, fizika, kimyo, biologiya kabi fanlar bo'yicha chuqur bilim
+                        va amaliy ko'nikmalarga ega bo'lishini ta'minlaydi. Maqsadimiz — mustaqil fikrlay oladigan,
+                        ilmiy-tadqiqot faoliyatiga qiziquvchan yoshlarni voyaga yetkazishdir.</p>
+                    <ul class="about-list">
+                        <li><i class="fa-solid fa-check"></i> Aniq va tabiiy fanlarga ixtisoslashgan ta'lim</li>
+                        <li><i class="fa-solid fa-check"></i> 460 nafardan ortiq o'quvchi</li>
+                        <li><i class="fa-solid fa-check"></i> Davlat agentligi tasarrufidagi maktab</li>
+                        <li><i class="fa-solid fa-check"></i> Amaliy va tahliliy tafakkurga yo'naltirilgan dastur</li>
+                    </ul>
+                </div>
+                <div class="about-image">
+                    <div class="about-image-wrapper">
+                        <img src="maktab.jpg" alt="Maktab binosi">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="section-title">
+            <span class="section-badge">Afzalliklarimiz</span>
+            <h2>Nima uchun bizni tanlashadi?</h2>
+            <div class="underline"></div>
+        </div>
+        <div class="container grid">
+            <div class="feature-card">
+                <div class="icon"><i class="fa-solid fa-flask"></i></div>
+                <h3>Zamonaviy Laboratoriya</h3>
+                <p>Kimyo va biologiya fanlari uchun eng so'nggi jihozlangan laboratoriyalar.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon"><i class="fa-solid fa-medal"></i></div>
+                <h3>IELTS Markazi</h3>
+                <p>Ingliz tili imtihoniga tayyorgarlik va band score oshirish kurslari.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon"><i class="fa-solid fa-trophy"></i></div>
+                <h3>Sport Majmuasi</h3>
+                <p>O'quvchilarning jismoniy salomatligi uchun barcha sharoitlar mavjud.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon"><i class="fa-solid fa-book-open-reader"></i></div>
+                <h3>Kutubxona</h3>
+                <p>Zamonaviy kutubxona — elektron va bosma resurslar to'plami.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon"><i class="fa-solid fa-location-dot"></i></div>
+                <h3>Qulay lokatsiya</h3>
+                <p>Maktab qulay va yetib borish oson bo'lgan hududda joylashgan.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon"><i class="fa-solid fa-dumbbell"></i></div>
+                <h3>Work-out zona</h3>
+                <p>O'quvchilar uchun jihozlangan zamonaviy mashqlar maydonchasi.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon"><i class="fa-solid fa-microchip"></i></div>
+                <h3>Zamonaviy IT xonalar</h3>
+                <p>Eng so'nggi texnika bilan jihozlangan kompyuter va IT sinflari.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon"><i class="fa-solid fa-robot"></i></div>
+                <h3>Robototexnika mashg'ulotlari</h3>
+                <p>O'quvchilar uchun robototexnika va dasturlash bo'yicha amaliy darslar.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon"><i class="fa-solid fa-pen-to-square"></i></div>
+                <h3>SAT-ga tayyorlov</h3>
+                <p>Xalqaro SAT imtihoniga tayyorgarlik ko'rish uchun maxsus kurslar.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon"><i class="fa-solid fa-palette"></i></div>
+                <h3>ART to'garaklari</h3>
+                <p>O'quvchilarning ijodiy salohiyatini rivojlantiruvchi rasm chizish va san'at to'garaklari.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="teachers" class="teachers-section">
+        <div class="container">
+            <div class="section-title">
+                <span class="section-badge">Malakali ustozlar</span>
+                <h2>O'qituvchilarimiz</h2>
+                <div class="underline"></div>
+            </div>
+            <div class="teachers-grid">
+                <div class="teacher-card">
+                    <div class="teacher-image">
+                        <img src="teachers/17.jpg">
+                    </div>
+                    <div class="teacher-info">
+                        <h3>Nuriddinova Nargiza Risqiboyevna</h3>
+                        <p class="teacher-subject">Matematika fani o'qituvchisi</p>
+                    </div>
+                </div>
+                <div class="teacher-card">
+                    <div class="teacher-image">
+                        <img src="teachers/41.jpg">
+                    </div>
+                    <div class="teacher-info">
+                        <h3>Muzaffarova Nargiza Rustamovna</h3>
+                        <p class="teacher-subject">Informatika fani o'qituvchisi</p>
+                    </div>
+                </div>
+                <div class="teacher-card">
+                    <div class="teacher-image">
+                        <img src="teachers/20.jpg">
+                    </div>
+                    <div class="teacher-info">
+                        <h3>O'sarov Ibrohim Dilmurod o'g'li</h3>
+                        <p class="teacher-subject">Fizika fani o'qituvchisi</p>
+                    </div>
+                </div>
+            </div>
+            <div class="teachers-cta">
+                <a href="oqituvchilar.html" class="btn-primary">Barchasi <i
+                        class="fa-solid fa-circle-chevron-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- OCHIQ ESHIKLAR KUNI BANNERI -->
+    <section class="open-day-section">
+        <div class="container">
+            <div class="open-day-banner">
+                <div class="open-day-left">
+                    <div class="open-day-icon">🏫</div>
+                    <div>
+                        <div class="open-day-label">E'lon</div>
+                        <h2 class="open-day-title">OCHIQ ESHIKLAR KUNI</h2>
+                        <p class="open-day-sub">Parkent tuman ixtisoslashtirilgan maktabida</p>
+                    </div>
+                </div>
+                <div class="open-day-center">
+                    <div class="open-day-dates">
+                        <div class="open-day-date-row">
+                            <span class="od-icon">🗓</span>
+                            <span><strong>Aprel:</strong> 4, 11, 18, 25</span>
+                        </div>
+                        <div class="open-day-date-row">
+                            <span class="od-icon">🗓</span>
+                            <span><strong>May:</strong> 2 va 16</span>
+                        </div>
+                        <div class="open-day-date-row">
+                            <span class="od-icon">⏰</span>
+                            <span><strong>Vaqt:</strong> 09:00 – 12:00</span>
+                        </div>
+                    </div>
+                    <div class="open-day-classes">
+                        <span class="od-badge">✔️ 5-sinf — aniq fanlar</span>
+                        <span class="od-badge">✔️ 7-sinf — tabiiy yo'nalishlar</span>
+                    </div>
+                </div>
+                <div class="open-day-right">
+                    <div class="od-features">
+                        <div class="od-feat"><span>🔬</span> STEM loyihalar</div>
+                        <div class="od-feat"><span>🤖</span> Robototexnika</div>
+                        <div class="od-feat"><span>🧠</span> Psixologik treninglar</div>
+                        <div class="od-feat"><span>🎯</span> Qiziqarli viktorinalar</div>
+                    </div>
+                    <a href="https://t.me/Parkent_tuman_IM" target="_blank" class="od-tg-btn">
+                        <i class="fa-brands fa-telegram"></i> Batafsil: @Parkent_IM
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="news" class="news-section">
+        <div class="container">
+            <div class="section-title">
+                <span class="section-badge">So'nggi yangiliklar</span>
+                <h2>Yangiliklar</h2>
+                <div class="underline"></div>
+            </div>
+
+            <!-- Filtrlash tugmalari -->
+            <div class="news-filter-bar">
+                <button class="news-filter-btn active" data-filter="all">Barchasi</button>
+                <button class="news-filter-btn" data-filter="olimpiada">Olimpiada</button>
+                <button class="news-filter-btn" data-filter="tadbir">Tadbirlar</button>
+                <button class="news-filter-btn" data-filter="sport">Sport</button>
+                <button class="news-filter-btn" data-filter="hamkorlik">Hamkorlik</button>
+            </div>
+
+            <!-- Asosiy yangilik (katta) + yonida kichiklar -->
+            <div class="news-featured-row">
+                <!-- Katta yangilik -->
+                <article class="news-featured-card" data-category="olimpiada">
+                    <div class="news-featured-img">
+                        <img src="maktab-binosi.jpg" alt="G'oliblarni taqdirlash"
+                            onerror="this.parentElement.style.background='linear-gradient(135deg,#0a1d37,#1a3a5c)'; this.style.display='none'">
+                        <div class="news-featured-overlay">
+                            <span class="news-cat-badge olimpiada-badge"><i class="fa-solid fa-trophy"></i>
+                                Olimpiada</span>
+                            <h3>G'oliblarni taqdirlash marosimi o'tkazildi</h3>
+                            <div class="news-meta-row">
+                                <span><i class="fa-regular fa-calendar"></i> 27 Mart 2026</span>
+                                <span><i class="fa-regular fa-user"></i> Axborot xizmati</span>
+                            </div>
+                            <p>Joriy yilning 23–29-mart kunlari respublikamiz hududlarida o'tkazilgan Asosiy
+                                olimpiadaning Respublika bosqichi g'oliblari taqdirlandi. Maktabimiz o'quvchilari
+                                alohida muvaffaqiyat qozondi.</p>
+                            <a href="#" class="news-read-more">Batafsil o'qish <i
+                                    class="fa-solid fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Yonidagi kichik yangiliklar -->
+                <div class="news-side-list">
+                    <article class="news-side-card" data-category="hamkorlik">
+                        <div class="news-side-icon hamkorlik-icon">
+                            <i class="fa-solid fa-handshake"></i>
+                        </div>
+                        <div class="news-side-body">
+                            <span class="news-cat-badge hamkorlik-badge">Hamkorlik</span>
+                            <h4>Hamkorlik memorandumi imzolandi</h4>
+                            <p>O'zbekiston Respublikasi Prezidentining 2026-yil 5-martdagi PF-35-sonli Farmoni ijrosini
+                                ta'minlash...</p>
+                            <div class="news-side-meta">
+                                <span><i class="fa-regular fa-calendar"></i> 27 Mart 2026</span>
+                                <a href="#">O'qish <i class="fa-solid fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="news-side-card" data-category="olimpiada">
+                        <div class="news-side-icon olimpiada-icon">
+                            <i class="fa-solid fa-medal"></i>
+                        </div>
+                        <div class="news-side-body">
+                            <span class="news-cat-badge olimpiada-badge">Olimpiada</span>
+                            <h4>Robototexnika olimpiadasi g'oliblari</h4>
+                            <p>Maktabimiz o'quvchilari viloyat robototexnika olimpiadasida 1-o'rinni qo'lga kiritishdi.
+                            </p>
+                            <div class="news-side-meta">
+                                <span><i class="fa-regular fa-calendar"></i> 25 Mart 2026</span>
+                                <a href="#">O'qish <i class="fa-solid fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="news-side-card" data-category="tadbir">
+                        <div class="news-side-icon tadbir-icon">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <div class="news-side-body">
+                            <span class="news-cat-badge tadbir-badge">Tadbir</span>
+                            <h4>Navro'z bayrami tantanali nishonlandi</h4>
+                            <p>Maktabimizda Navro'z bayrami munosabati bilan o'quvchilar tomonidan konsert dasturi
+                                taqdim etildi.</p>
+                            <div class="news-side-meta">
+                                <span><i class="fa-regular fa-calendar"></i> 21 Mart 2026</span>
+                                <a href="#">O'qish <i class="fa-solid fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <!-- Qo'shimcha yangiliklar 3 ta karta -->
+            <div class="news-grid-bottom">
+
+                <!-- KARTA 1: SAT -->
+                <article class="news-card-new" data-category="sport">
+                    <div class="news-card-top sport-bg">
+                        <span class="news-date-corner">20 Mart 2026</span>
+                    </div>
+                    <div class="news-card-body">
+                        <h4>📢 SAT darslariga taklif!</h4>
+                        <p>SAT imtihoniga tayyorlanmoqchimisiz? Unda bizning darslarimizga qo'shiling!</p>
+                        <a href="#" class="news-link" onclick="openNewsModal(0); return false;">
+                            Batafsil <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- KARTA 2: Ochiq eshiklar -->
+                <article class="news-card-new" data-category="tadbir">
+                    <div class="news-card-top tadbir-bg">
+                        <span class="news-date-corner">4 Aprel 2026</span>
+                    </div>
+                    <div class="news-card-body">
+                        <h4>✨ Ochiq eshiklar kuni</h4>
+                        <p>Bilim, ilhom va imkoniyatlar makoni! Parkent maktabida unutilmas tadbir bo'lib o'tdi.</p>
+                        <a href="#" class="news-link" onclick="openNewsModal(1); return false;">
+                            Batafsil <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- KARTA 3: Vatanparvar -->
+                <article class="news-card-new" data-category="olimpiada">
+                    <div class="news-card-top olimpiada2-bg">
+                        <span class="news-date-corner">15 Mart 2026</span>
+                    </div>
+                    <div class="news-card-body">
+                        <h4>⚡️ Vatanparvar harbiy sport o'yinlari</h4>
+                        <p>29-maktab "Qalqon" jamoasi tuman bosqichida ketma-ket 3 karra g'olib bo'ldi!</p>
+                        <a href="#" class="news-link" onclick="openNewsModal(2); return false;">
+                            Batafsil <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+
+            </div>
+
+            <!-- ===== MODAL ===== -->
+            <div id="newsModal" onclick="if(event.target===this)closeNewsModal()"
+                style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+                <div
+                    style="background:#fff;border-radius:20px;max-width:540px;width:100%;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.35);max-height:90vh;display:flex;flex-direction:column;">
+
+                    <!-- Modal top banner -->
+                    <div id="modal-banner"
+                        style="min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:2.8rem;position:relative;flex-shrink:0;">
+                        <i id="modal-icon"></i>
+                        <span id="modal-badge" class="news-cat-badge" style="margin-top:10px;"></span>
+                        <span id="modal-date"
+                            style="position:absolute;bottom:12px;right:16px;font-size:0.75rem;opacity:0.85;font-weight:500;"></span>
+                        <!-- Yopish tugmasi -->
+                        <button onclick="closeNewsModal()"
+                            style="position:absolute;top:12px;right:14px;background:rgba(255,255,255,0.25);border:none;border-radius:50%;width:32px;height:32px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:inherit;line-height:1;">✕</button>
+                    </div>
+
+                    <!-- Modal kontent -->
+                    <div style="padding:24px 28px;overflow-y:auto;">
+                        <h3 id="modal-title"
+                            style="font-size:1.2rem;font-weight:700;color:#0a1d37;margin:0 0 16px;line-height:1.4;">
+                        </h3>
+                        <div id="modal-body" style="font-size:0.9rem;color:#555;line-height:1.8;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== MODAL CSS ===== -->
+            <style>
+                /* Eski gradientlar o'rniga rasmlar */
+                .sport-bg {
+                    background: linear-gradient(rgba(10, 29, 55, 0.35), rgba(10, 29, 55, 0.35)),
+                        url('news/SAT.jpg') center 35%/cover no-repeat;
+                    color: var(--parkent-gold);
+                }
+
+                .tadbir-bg {
+                    background: linear-gradient(rgba(255, 177, 0, 0.3), rgba(255, 177, 0, 0.3)),
+                        url('news/odd.jpg') center 20%/cover no-repeat;
+                    color: var(--parkent-blue);
+                }
+
+                .olimpiada2-bg {
+                    background: linear-gradient(rgba(10, 29, 55, 0.4), rgba(10, 29, 55, 0.4)),
+                        url('news/harbiy.jpg') center 15%/cover no-repeat;
+                    color: var(--parkent-gold);
+                }
+
+                #modal-banner {
+                    min-height: 210px !important;
+                }
+
+                #newsModal {
+                    display: none;
+                }
+
+                #newsModal.active {
+                    display: flex;
+                }
+            </style>
+
+            <!-- ===== MODAL JS ===== -->
+            <script>
+                const newsData = [
+                    {
+                        title: "📢 SAT darslariga taklif!",
+                        category: "Sport",
+                        badgeClass: "sport-badge",
+                        bannerClass: "sport-bg",
+                        icon: "fa-solid fa-futbol",
+                        date: "20 Mart 2026",
+                        body: `
+            <p>SAT imtihoniga tayyorlanmoqchimisiz? Unda bizning darslarimizga qo'shiling!</p>
+            <br>
+            <p><strong>📗 Matematika</strong></p>
+            <p>👨‍🏫 O'qituvchi: Diyor Qozoqboyev</p>
+            <p>🗓 Shanba &nbsp;|&nbsp; ⏰ 11:00 &nbsp;|&nbsp; 📍 3-qavat</p>
+            <br>
+            <p><strong>📘 Ingliz tili</strong></p>
+            <p>👩‍🏫 O'qituvchi: Dilsora Qaxorova</p>
+            <p>🗓 Seshanba &nbsp;|&nbsp; ⏰ 15:00 &nbsp;|&nbsp; 📍 3-qavat</p>
+            <br>
+            <p>❗️ Darslarga qatnashish uchun sizda sertifikat bo'lishi shart emas.</p>
+            <br>
+            <p>✉️ Guruhga qo'shilish uchun: <strong>@soonyaaaz1</strong> telegramiga to'liq ism-familiyangiz va sinfingizni yozib yuboring.</p>
+            <br>
+            <p>🚀 Hoziroq qo'shiling va biz bilan yuqori natijalarga erishing!</p>
+        `
+                    },
+                    {
+                        title: "✨ Ochiq eshiklar kuni — bilim, ilhom va imkoniyatlar makoni!",
+                        category: "Tadbir",
+                        badgeClass: "tadbir-badge",
+                        bannerClass: "tadbir-bg",
+                        icon: "fa-solid fa-chalkboard-teacher",
+                        date: "4 Aprel 2026",
+                        body: `
+            <p>4-aprel kuni Parkent tuman ixtisoslashtirilgan maktabida "Ochiq eshiklar kuni" tadbiri mazmunan boy va unutilmas lahzalarga boy tarzda tashkil etildi.</p>
+            <br>
+            <p>Tadbir ochilish marosimi bilan boshlandi. Unda maktab direktori hamda fan olimpiadalari g'oliblari so'zga chiqib, erishilgan yutuqlar va kelajak rejalari haqida so'z yuritdilar. Shuningdek, STEM yo'nalishi haqida qiziqarli va tushunarli ma'lumotlar berildi.</p>
+            <br>
+            <p>🔬 STEM yo'nalishiga oid konkurs va viktorinalar</p>
+            <p>🧠 Psixologik treninglar</p>
+            <p>🏫 Maktab bo'ylab ekskursiyalar</p>
+            <br>
+            <p>Fan xonalarida:</p>
+            <p>🎲 Zakovat intellektual o'yinlari</p>
+            <p>🧪 Amaliy tajribalar</p>
+            <p>🎯 Turli interaktiv mashg'ulotlar</p>
+            <br>
+            <p>🏆 Tadbir yakunida faol qatnashgan o'quvchilarga esdalik sovg'alari topshirildi.</p>
+            <br>
+            <p><strong>350 nafardan ortiq</strong> o'quvchilar, ustozlar va ota-onalar ishtirok etgan ushbu tadbir har bir mehmon uchun yangi taassurot va motivatsiya manbai bo'ldi.</p>
+            <br>
+            <p>💙 Parkent tuman ixtisoslashtirilgan maktabi — kelajak sari ishonchli qadam!</p>
+        `
+                    },
+                    {
+                        title: "⚡️ \"Vatanparvar harbiy sport o'yinlari\" tuman bosqichi bo'lib o'tdi",
+                        category: "Sport",
+                        badgeClass: "olimpiada-badge",
+                        bannerClass: "olimpiada2-bg",
+                        icon: "fa-solid fa-shield-halved",
+                        date: "15 Mart 2026",
+                        body: `
+            <p>Tumanimizning Ixtisoslashtirilgan maktabida "Vatanparvar harbiy sport o'yinlari" tuman bosqichi bo'lib o'tdi.</p>
+            <br>
+            <p>Unda hudud bosqichlarida saralangan <strong>19-, 26-, 28-, 29-, 30-, 37- va 55-maktab</strong> jamoalari 8 ta shart bo'yicha murosasiz bahs olib borishdi.</p>
+            <br>
+            <p><strong>29-maktabning "Qalqon" jamoasi quyidagi shartlarda g'olib chiqdi:</strong></p>
+            <p>✅ Safda yurish</p>
+            <p>✅ Turnikda tortinish</p>
+            <p>✅ Estafeta</p>
+            <p>✅ Birinchi tibbiy yordam ko'rsatish</p>
+            <p>✅ Temur tuzuklari</p>
+            <br>
+            <p>Tuman bosqichida <strong>ketma-ket 3 karra g'olib</strong>!</p>
+            <br>
+            <p>Ushbu g'alaba – o'quvchilarning jamoaviy hamjihatligi, ustozlarning fidokorona mehnati natijasidir.</p>
+            <br>
+            <p>29-maktab jamoasini ushbu ulkan muvaffaqiyat bilan chin dildan tabriklaymiz! 🏆</p>
+            <br>
+            <p>Bunday g'alabalar yoshlar qalbida vatanga muhabbat va sadoqat tuyg'ularini yanada mustahkamlaydi.</p>
+        `
+                    }
+                ];
+
+                function openNewsModal(index) {
+                    const d = newsData[index];
+                    const modal = document.getElementById('newsModal');
+                    const banner = document.getElementById('modal-banner');
+
+                    // Banner class
+                    banner.className = d.bannerClass;
+                    banner.style.cssText = 'min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:2.8rem;position:relative;flex-shrink:0;';
+
+                    document.getElementById('modal-icon').className = d.icon;
+                    document.getElementById('modal-badge').className = 'news-cat-badge ' + d.badgeClass;
+                    document.getElementById('modal-badge').textContent = d.category;
+                    document.getElementById('modal-date').textContent = d.date;
+                    document.getElementById('modal-title').textContent = d.title.replace(/📢|✨|⚡️/g, '').trim();
+                    document.getElementById('modal-body').innerHTML = d.body;
+
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+
+                function closeNewsModal() {
+                    document.getElementById('newsModal').classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape') closeNewsModal();
+                });
+            </script>
+
+            <!-- VIDEO YANGILIKLAR -->
+            <h3 class="news-section-subtitle" style="margin-top:50px; margin-bottom:25px;">
+                <i class="fa-solid fa-circle-play" style="color:var(--parkent-gold); margin-right:8px;"></i>
+                Video yangiliklar
+            </h3>
+
+            <div class="news-video-grid">
+
+                <!-- VIDEO KARTA 1 -->
+                <article class="news-video-card" data-category="tadbir"
+                    onclick="openVideoModal('youtube', 'https://www.youtube.com/embed/Y5Fe1wnrnrU', 'Ochiq eshiklar kuni')">
+                    <div class="news-video-thumb">
+                        <img src="https://img.youtube.com/vi/Y5Fe1wnrnrU/hqdefault.jpg"
+                            style="width:100%; height:100%; object-fit:cover;">
+                        <div class="vid-play-btn"><i class="fa-solid fa-play"></i></div>
+                        <span class="news-date-corner">2 Aprel 2026</span>
+                    </div>
+                    <div class="news-card-body">
+                        <h4>Ochiq eshiklar kuni</h4>
+                        <p>Parkent tuman ixtisoslashtirilgan maktabida <br>
+
+                            🗓 4, 11, 18, 25-aprel <br>
+                            🗓 2 va 16-may <br>
+                            ⏰ 09:00 – 12:00 </p>
+                        <span class="news-link"><i class="fa-solid fa-circle-play"></i> Videoni ko'rish</span>
+                    </div>
+                </article>
+
+                <!-- VIDEO KARTA 2 -->
+                <article class="news-video-card" data-category="hamkorlik"
+                    onclick="openVideoModal('youtube', 'https://www.youtube.com/embed/3jomnSrtT6Y', 'Parkent tuman ixtisoslashtirilgan maktabi')">
+                    <div class="news-video-thumb">
+                        <img src="https://img.youtube.com/vi/3jomnSrtT6Y/hqdefault.jpg"
+                            style="width:100%; height:100%; object-fit:cover;">
+                        <div class="vid-play-btn"><i class="fa-solid fa-play"></i></div>
+                        <span class="news-date-corner">27 Noyabr 2025</span>
+                    </div>
+                    <div class="news-card-body">
+                        <h4>Parkent tuman ixtisoslashtirilgan maktabi</h4>
+                        <p>Kelajak shu yerdan boshlanadi!</p>
+                        <span class="news-link"><i class="fa-solid fa-circle-play"></i> Videoni ko'rish</span>
+                    </div>
+                </article>
+
+                <!-- VIDEO KARTA 3 -->
+                <article class="news-video-card" data-category="tadbir"
+                    onclick="openVideoModal('youtube', 'https://www.youtube.com/embed/YX7BBZK9qgI', 'Parkent tuman ixtisoslashtirilgan maktabi haqida')">
+                    <div class="news-video-thumb">
+                        <img src="https://img.youtube.com/vi/YX7BBZK9qgI/hqdefault.jpg"
+                            style="width:100%; height:100%; object-fit:cover;">
+                        <div class="vid-play-btn"><i class="fa-solid fa-play"></i></div>
+                        <span class="news-date-corner">6 May 2025</span>
+                    </div>
+                    <div class="news-card-body">
+                        <h4>Parkent tuman ixtisoslashtirilgan maktabi</h4>
+                        <p>Maktab haqida</p>
+                        <span class="news-link"><i class="fa-solid fa-circle-play"></i> Videoni ko'rish</span>
+                    </div>
+                </article>
+
+            </div>
+
+            <!-- VIDEO MODAL -->
+            <div class="video-modal" id="videoModal" onclick="closeVideoModal(event)">
+                <div class="video-modal-box">
+                    <button class="video-modal-close" onclick="closeVideoModal()">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    <div class="video-modal-title" id="videoModalTitle"></div>
+                    <video id="modalVideo" controls playsinline
+                        style="width:100%; border-radius:10px; display:none;"></video>
+                    <iframe id="modalYoutube" width="100%" height="400" frameborder="0"
+                        allow="autoplay; encrypted-media" allowfullscreen
+                        style="border-radius:10px; display:none;"></iframe>
+                </div>
+            </div>
+
+            <!-- Barcha yangiliklar tugmasi -->
+            <div class="news-cta">
+                <a href="yangiliklar.html" class="btn-primary">Barcha yangiliklar
+                    <i class="fa-solid fa-circle-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="schedule" class="schedule-section">
+        <div class="container">
+            <div class="section-title">
+                <span class="section-badge">Dars jadvali</span>
+                <h2>Haftalik dars jadvali</h2>
+                <p style="color:#666; font-size:0.9rem; margin-top:8px;">II chorak 2025-2026 o'quv yili</p>
+                <div class="underline"></div>
+            </div>
+            <!-- Jadval JavaScript orqali yaratiladi -->
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <span class="section-badge">Bog'lanish</span>
+                    <h2>Biz bilan bog'laning</h2>
+                    <div class="underline"></div>
+                    <p>Savollaringiz bo'lsa yoki imtihon topshirishni xohlasangiz, quyidagi ma'lumotlar orqali biz bilan
+                        bog'laning.</p>
+                    <div class="contact-items">
+                        <div class="contact-item">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <div>
+                                <strong>Manzil</strong>
+                                <p>Parkent tumani, Parkent shahri</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fa-solid fa-phone"></i>
+                            <div>
+                                <strong>Telefon</strong>
+                                <p>+998 99 612 51 80</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fa-solid fa-envelope"></i>
+                            <div>
+                                <strong>Email</strong>
+                                <p><span class="__cf_email__"
+                                        data-cfemail="7a0a13171b0a1b08111f140e3a1d171b131654191517">pimaparkent@gmail.com</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form class="contact-form" id="contact-form">
+                    <input type="text" id="name" name="name" placeholder="Ismingiz" required>
+                    <input type="tel" id="phone" name="phone" placeholder="Telefon raqamingiz" required>
+                    <input type="email" id="email" name="email" placeholder="Email manzilingiz">
+                    <textarea id="message" name="message" placeholder="Xabaringiz" rows="5" required></textarea>
+                    <button type="submit" id="submit-btn" class="btn-primary btn-full">Yuborish</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <img src="logo1.png" alt="PTM Logo" class="footer-logo">
+                    <p>Parkent tuman ixtisoslashtirilgan maktabi — kelajak bunyodkorlarini tarbiyalaymiz.</p>
+                    <div class="footer-social">
+                        <a href="https://t.me/Parkent_tuman_IM" aria-label="Telegram"><i
+                                class="fa-brands fa-telegram"></i></a>
+                        <a href="https://www.facebook.com/groups/1553604381759572/" aria-label="Facebook"><i
+                                class="fa-brands fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/parkent_pima?igsh=bjkyZnc2MXpzNGk" aria-label="Instagram"><i
+                                class="fa-brands fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/@PIMAParkent" aria-label="Youtube"><i
+                                class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Tezkor havolalar</h4>
+                    <ul>
+                        <li><a href="#">Bosh sahifa</a></li>
+                        <li><a href="#about">Maktab haqida</a></li>
+                        <li><a href="qabul-jarayoni.html">Qabul jarayoni</a></li>
+                        <li><a href="oqituvchilar.html">O'qituvchilar</a></li>
+                        <li><a href="songgi-yangiliklar.html">Yangiliklar</a></li>
+                        <li><a href="#schedule">Dars jadvali</a></li>
+                        <li><a href="#contact">Bog'lanish</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Aloqa</h4>
+                    <p><i class="fa-solid fa-phone"></i> +998 99 612 51 80</p>
+                    <p><i class="fa-solid fa-envelope"></i> <a class="__cf_email__"
+                            data-cfemail="8ae3e4ece5cafaebf8e1efe4fea7f9e9e2e5e5e6a4fff0"><span class="__cf_email__"
+                                data-cfemail="790910141809180b121c170d391e14181015571a1614">pimaparkent@gmail.com</span></a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 Parkent tuman ixtisoslashtirilgan maktabi. Barcha huquqlar himoyalangan.</p>
+                <h3>Dasturchi: <a href="https://t.me/Ziyaviddinov_Ilxom"
+                        style="color: aliceblue; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">Ilxom
+                        Ziyaviddinov</a>
+                </h3>
+            </div>
+    </footer>
+    <script>
+        const labels = ['Yuklanmoqda...', "Ma'lumotlar...", 'Tayyorlanmoqda...', 'Xush kelibsiz!'];
+        let progress = 0;
+        const fill = document.getElementById('progressFill');
+        const label = document.getElementById('loadingLabel');
+
+        const iv = setInterval(() => {
+            progress += Math.random() * 1 + 0.3;
+            if (progress > 100) progress = 100;
+
+            fill.style.width = progress + '%';
+
+            if (progress < 35) label.textContent = labels[0];
+            else if (progress < 65) label.textContent = labels[1];
+            else if (progress < 90) label.textContent = labels[2];
+            else label.textContent = labels[3];
+
+            if (progress >= 100) {
+                clearInterval(iv);
+                setTimeout(() => {
+                    document.getElementById('loader-overlay').classList.add('hidden');
+                }, 500);
+            }
+        }, 40);
+    </script>
+    <script src="script.js"></script>
+</body>
+
+</html>
