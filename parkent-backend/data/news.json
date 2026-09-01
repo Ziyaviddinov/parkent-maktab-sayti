@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "id": "mtfmvtbkflooh3",
+    "title": "Rasmlar",
+    "text": "-- ============ INGLIZ TILI ============\ninsert into public.questions (subject, topic, question_text, option_a, option_b, option_c, option_d, correct_answer, difficulty, explanation) values\n('ingliz-tili', 'Grammar', 'Choose the correct sentence:', 'If I would know, I would tell you', 'If I knew, I would tell you', 'If I know, I would tell you', 'If I had knew, I would tell you', 1, 'hard', 'Second conditional: If + Past Simple, would + base form'),\n('ingliz-tili', 'Grammar', 'By the time we arrived, the movie ___.', 'already started', 'had already started', 'has already started', 'was already starting', 1, 'hard', 'Past Perfect: action completed before another past action'),\n('ingliz-tili', 'Vocabulary', 'The word \"meticulous\" is closest in meaning to:', 'Careless', 'Very careful and precise', 'Fast', 'Lazy', 1, 'hard', '\"Meticulous\" — juda ehtiyotkor, aniq'),\n('ingliz-tili', 'Grammar', 'She suggested ___ to the museum on Saturday.', 'to go', 'going', 'go', 'went', 1, 'hard', '\"Suggest\" + gerund (V-ing)'),\n('ingliz-tili', 'Passive voice', 'The bridge ___ in 1932.', 'built', 'was built', 'has built', 'is building', 1, 'hard', 'Passive Past Simple: was/were + V3'),\n('ingliz-tili', 'Grammar', 'I wish I ___ more time to prepare for the exam.', 'have', 'had', 'has', 'will have', 1, 'hard', 'I wish + Past Simple (hozirgi holatga achinish)'),\n('ingliz-tili', 'Phrasal verbs', '\"To put off\" means:', 'To wear', 'To postpone', 'To turn on', 'To remove quickly', 1, 'hard', '\"Put off\" — kechiktirmoq, orqaga surmoq'),\n('ingliz-tili', 'Grammar', 'Hardly ___ the show started when it began to rain.', 'had', 'has', 'did', 'was', 0, 'hard', 'Inversion: Hardly had + subject + V3'),\n('ingliz-tili', 'Vocabulary', 'Choose the word that means \"very old and famous\":', 'Ancient', 'Prestigious', 'Renowned', 'Modern', 2, 'hard', '\"Renowned\" — mashhur, taniqli'),\n('ingliz-tili', 'Grammar', 'Not only ___ late, but he also forgot his homework.', 'he was', 'was he', 'he did', 'did he', 1, 'hard', 'Inversion after \"Not only\": Not only + auxiliary + subject');",
+    "image": "/uploads/1788083617013-545776178.jpg",
+    "gallery": [
+      "/uploads/1788083617013-545776178.jpg",
+      "/uploads/1788083645414-333082493.jpg",
+      "/uploads/1788083677460-408275093.jpg",
+      "/uploads/1788083678933-190313942.jpg"
+    ],
+    "createdAt": "2026-08-30T09:55:26.420Z",
+    "source": "telegram-bot"
+  }
+]
