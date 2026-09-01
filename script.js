@@ -445,7 +445,7 @@ document.querySelectorAll('.vid-thumb-preview').forEach(function (vid) {
 document.addEventListener('DOMContentLoaded', function () {
 
   // Backend server manzili - ishlab chiqarishga qo'yganda haqiqiy domenga o'zgartiring
-  const BACKEND_API_URL = 'http://localhost:3000';
+  const BACKEND_API_URL = 'https://parkent-maktab-sayti.onrender.com';
 
   async function sendToTelegram(name, phone, email, message) {
     const res = await fetch(`${BACKEND_API_URL}/api/contact`, {
