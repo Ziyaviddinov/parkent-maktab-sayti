@@ -20,6 +20,24 @@ const ADMIN_IDS = (process.env.ADMIN_TELEGRAM_IDS || '')
 const UPLOAD_DIR = path.join(__dirname, 'uploads');
 if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
+// ============ QO'SHIMCHA ADMINLAR (bot ichidan qo'shiladi) ============
+const ADMINS_DB_PATH = path.join(__dirname, 'data', 'admins.json');
+
+function readExtraAdmins() {
+  try {
+    const raw = fs.readFileSync(ADMINS_DB_PATH, 'utf-8');
+    return JSON.parse(raw || '[]');
+  } catch (err) {
+    return [];
+  }
+}
+
+function writeExtraAdmins(list) {
+  const dir = path.dirname(ADMINS_DB_PATH);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(ADMINS_DB_PATH, JSON.stringify(list, null, 2), 'utf-8');
+}
+
 if (!TOKEN) {
   console.error('❌ NEWS_BOT_TOKEN topilmadi (.env faylini tekshiring)');
   process.exit(1);
@@ -51,21 +69,31 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;');
 }
 
-function isAuthorized(userId) {
+// Egasi (.env dagi ADMIN_TELEGRAM_IDS) — hech qachon o'chirilmaydi, adminlarni boshqara oladi
+function isOwner(userId) {
   return ADMIN_IDS.includes(String(userId));
+}
+
+// Bot ichidan qo'shilgan adminlar + egalar — barchasi botdan foydalana oladi
+function isAuthorized(userId) {
+  if (isOwner(userId)) return true;
+  const extra = readExtraAdmins();
+  return extra.some((a) => a.id === String(userId));
 }
 
 // ============ TUGMALAR (INLINE KEYBOARD) ============
 
-function mainMenuKeyboard() {
-  return {
-    inline_keyboard: [
-      [{ text: "➕ Yangilik qo'shish", callback_data: 'add_news' }],
-      [{ text: '📋 Oxirgi yangiliklar', callback_data: 'list_news' }],
-      [{ text: "🗑 Yangilikni o'chirish", callback_data: 'delete_menu' }],
-      [{ text: 'ℹ️ Yordam', callback_data: 'help' }],
-    ],
-  };
+function mainMenuKeyboard(userId) {
+  const rows = [
+    [{ text: "➕ Yangilik qo'shish", callback_data: 'add_news' }],
+    [{ text: '📋 Oxirgi yangiliklar', callback_data: 'list_news' }],
+    [{ text: "🗑 Yangilikni o'chirish", callback_data: 'delete_menu' }],
+  ];
+  if (isOwner(userId)) {
+    rows.push([{ text: '👤 Adminlar', callback_data: 'admin_menu' }]);
+  }
+  rows.push([{ text: 'ℹ️ Yordam', callback_data: 'help' }]);
+  return { inline_keyboard: rows };
 }
 
 function backToMenuKeyboard() {
@@ -186,12 +214,62 @@ const HELP_TEXT =
   "🗑 <b>O'chirish</b> — istalgan yangilikni bot orqali o'chirish mumkin\n\n" +
   "Jarayonning istalgan bosqichida ❌ <b>Bekor qilish</b> tugmasini bosishingiz mumkin.";
 
-async function showMenu(chatId, messageId) {
+async function showMenu(chatId, messageId, userId) {
   if (messageId) {
-    await editMessageText(TOKEN, chatId, messageId, WELCOME_TEXT, { reply_markup: mainMenuKeyboard() });
+    await editMessageText(TOKEN, chatId, messageId, WELCOME_TEXT, { reply_markup: mainMenuKeyboard(userId) });
   } else {
-    await sendMessage(TOKEN, chatId, WELCOME_TEXT, { reply_markup: mainMenuKeyboard() });
+    await sendMessage(TOKEN, chatId, WELCOME_TEXT, { reply_markup: mainMenuKeyboard(userId) });
   }
+}
+
+// ============ ADMINLARNI BOSHQARISH (faqat egasi uchun) ============
+
+function adminMenuKeyboard() {
+  return {
+    inline_keyboard: [
+      [{ text: "➕ Admin qo'shish", callback_data: 'admin_add' }],
+      [{ text: '📋 Adminlar ro\'yxati', callback_data: 'admin_list' }],
+      [{ text: "🗑 Adminni o'chirish", callback_data: 'admin_del_menu' }],
+      [{ text: '⬅️ Bosh menyu', callback_data: 'menu' }],
+    ],
+  };
+}
+
+function adminDeleteListKeyboard(list) {
+  const rows = list.map((a) => [
+    { text: `🗑 ${a.id}`, callback_data: `admindel_${a.id}` },
+  ]);
+  rows.push([{ text: '⬅️ Orqaga', callback_data: 'admin_menu' }]);
+  return { inline_keyboard: rows };
+}
+
+async function showAdminMenu(chatId, messageId) {
+  const text =
+    '👤 <b>Adminlarni boshqarish</b>\n\n' +
+    'Bu bo\'lim orqali botdan foydalana oladigan yangi adminlarni qo\'shishingiz yoki o\'chirishingiz mumkin.';
+  await editMessageText(TOKEN, chatId, messageId, text, { reply_markup: adminMenuKeyboard() });
+}
+
+async function showAdminList(chatId, messageId) {
+  const owners = ADMIN_IDS.map((id) => `👑 <code>${id}</code> (egasi)`);
+  const extra = readExtraAdmins().map((a) => `👤 <code>${a.id}</code>`);
+  const lines = [...owners, ...extra];
+  const text = `📋 <b>Adminlar ro'yxati:</b>\n\n${lines.join('\n')}`;
+  await editMessageText(TOKEN, chatId, messageId, text, {
+    reply_markup: { inline_keyboard: [[{ text: '⬅️ Orqaga', callback_data: 'admin_menu' }]] },
+  });
+}
+
+async function showAdminDeleteMenu(chatId, messageId) {
+  const extra = readExtraAdmins();
+  if (extra.length === 0) {
+    return editMessageText(TOKEN, chatId, messageId, "📭 O'chirish uchun qo'shimcha admin yo'q.", {
+      reply_markup: adminMenuKeyboard(),
+    });
+  }
+  await editMessageText(TOKEN, chatId, messageId, "🗑 <b>Qaysi adminni o'chirmoqchisiz?</b>", {
+    reply_markup: adminDeleteListKeyboard(extra),
+  });
 }
 
 async function showNewsList(chatId, messageId) {
@@ -257,7 +335,50 @@ async function handleCallbackQuery(cq) {
 
   if (data === 'menu') {
     userState.delete(userId);
-    return showMenu(chatId, messageId);
+    return showMenu(chatId, messageId, userId);
+  }
+
+  // ---------- ADMINLARNI BOSHQARISH (faqat egasi) ----------
+  if (data === 'admin_menu' || data === 'admin_add' || data === 'admin_list' || data === 'admin_del_menu' || data.startsWith('admindel_')) {
+    if (!isOwner(userId)) {
+      await answerCallbackQuery(TOKEN, cq.id, "⛔ Bu bo'lim faqat bot egasi uchun", true);
+      return;
+    }
+
+    if (data === 'admin_menu') {
+      userState.delete(userId);
+      return showAdminMenu(chatId, messageId);
+    }
+
+    if (data === 'admin_add') {
+      userState.set(userId, { step: 'awaiting_admin_id' });
+      return editMessageText(
+        TOKEN,
+        chatId,
+        messageId,
+        "➕ <b>Yangi admin qo'shish</b>\n\n" +
+          "Yangi adminning Telegram ID raqamini yuboring.\n\n" +
+          "ℹ️ ID'ni bilish uchun: o'sha odam botga /start yuborishi kerak (agar ruxsati bo'lmasa, bot unga ID'sini ko'rsatadi), o'sha ID'ni shu yerga yuboring.",
+        { reply_markup: { inline_keyboard: [[{ text: '❌ Bekor qilish', callback_data: 'admin_menu' }]] } }
+      );
+    }
+
+    if (data === 'admin_list') {
+      return showAdminList(chatId, messageId);
+    }
+
+    if (data === 'admin_del_menu') {
+      return showAdminDeleteMenu(chatId, messageId);
+    }
+
+    if (data.startsWith('admindel_')) {
+      const id = data.slice('admindel_'.length);
+      const list = readExtraAdmins().filter((a) => a.id !== id);
+      writeExtraAdmins(list);
+      return editMessageText(TOKEN, chatId, messageId, `✅ <code>${id}</code> adminlikdan olib tashlandi.`, {
+        reply_markup: adminMenuKeyboard(),
+      });
+    }
   }
 
   if (data === 'help') {
@@ -277,7 +398,7 @@ async function handleCallbackQuery(cq) {
     }
     userState.delete(userId);
     return editMessageText(TOKEN, chatId, messageId, "❌ Yangilik qo'shish bekor qilindi.", {
-      reply_markup: mainMenuKeyboard(),
+      reply_markup: mainMenuKeyboard(userId),
     });
   }
 
@@ -285,7 +406,7 @@ async function handleCallbackQuery(cq) {
     const state = userState.get(userId);
     if (!state || state.step !== 'gallery_photos') {
       return editMessageText(TOKEN, chatId, messageId, "⚠️ Jarayon topilmadi, qaytadan boshlang.", {
-        reply_markup: mainMenuKeyboard(),
+        reply_markup: mainMenuKeyboard(userId),
       });
     }
     state.step = 'title';
@@ -365,10 +486,38 @@ async function handleMessage(msg) {
       cleanupFiles(files);
     }
     userState.delete(userId);
-    return showMenu(chatId);
+    return showMenu(chatId, null, userId);
   }
 
   const state = userState.get(userId);
+
+  // ---------- ADMIN ID KUTILMOQDA (egasi yangi admin qo'shmoqchi) ----------
+  if (state && state.step === 'awaiting_admin_id') {
+    const idText = (msg.text || '').trim();
+    if (!/^\d+$/.test(idText)) {
+      await sendMessage(TOKEN, chatId, "⚠️ Iltimos, faqat <b>raqamlardan iborat</b> Telegram ID yuboring.", {
+        reply_markup: { inline_keyboard: [[{ text: '❌ Bekor qilish', callback_data: 'admin_menu' }]] },
+      });
+      return;
+    }
+    userState.delete(userId);
+    if (isOwner(idText) || readExtraAdmins().some((a) => a.id === idText)) {
+      await sendMessage(TOKEN, chatId, `⚠️ <code>${idText}</code> allaqachon admin.`, {
+        reply_markup: adminMenuKeyboard(),
+      });
+      return;
+    }
+    const list = readExtraAdmins();
+    list.push({ id: idText, addedAt: new Date().toISOString(), addedBy: String(userId) });
+    writeExtraAdmins(list);
+    await sendMessage(
+      TOKEN,
+      chatId,
+      `✅ <b>Yangi admin qo'shildi!</b>\n\n🆔 <code>${idText}</code>\n\nEndi u botdan foydalana oladi.`,
+      { reply_markup: adminMenuKeyboard() }
+    );
+    return;
+  }
 
   // ---------- 1-BOSQICH: ASOSIY RASM ----------
   if (state && state.step === 'main_photo') {
@@ -498,7 +647,7 @@ async function handleMessage(msg) {
           `🖼 Rasmlar: ${totalImgs} ta\n` +
           `📅 ${formatDate(item.createdAt)}\n\n` +
           `🌐 Endi saytda ko'rinadi!`,
-        { reply_markup: mainMenuKeyboard() }
+        { reply_markup: mainMenuKeyboard(userId) }
       );
     } catch (err) {
       console.error(err);
@@ -511,7 +660,7 @@ async function handleMessage(msg) {
 
   // Boshqa har qanday matn - menyuni ko'rsatamiz
   await sendMessage(TOKEN, chatId, "🤔 Tushunmadim. Quyidagi menyudan foydalaning 👇", {
-    reply_markup: mainMenuKeyboard(),
+    reply_markup: mainMenuKeyboard(userId),
   });
 }
 
