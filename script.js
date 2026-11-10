@@ -62,7 +62,7 @@ window.addEventListener('scroll', updateActiveLink);
 // II chorak 2025-2026 o'quv yili
 // =============================================
 
-const SCHEDULE = {
+let SCHEDULE = {
   "5-A": {
     "dushanba": [["Ona tili", "2-12."], ["Matematika", "1-05. 3-12."], ["Matematika", "1-05. 3-12."], ["Ingliz tili", "3-01. 3-04."], ["San'at", "2-18."], ["Adabiyot", "2-12."]],
     "seshanba": [["Ingliz tili", "3-01. 3-02."], ["Informatika", "2-02. 2-03."], ["Matematika", "1-05. 3-12."], ["Rus tili", "1-1-02. 1-1-04."], ["Jismoniy tarbiya", "sport zali"], ["Science", "1-10."]],
@@ -238,7 +238,7 @@ const TIMES = [
 ];
 
 // Sinflarni guruhlash
-const CLASS_GROUPS = { "5": ["5-A", "5-B"], "6": ["6-A", "6-B"], "7": ["7-A", "7-B"], "8": ["8-A", "8-B", "8-D"], "9": ["9-A", "9-B", "9-D", "9-E"], "10": ["10-A", "10-B", "10-D", "10-E", "10-F"], "11": ["11-A", "11-B", "11-D", "11-E", "11-F"] };
+let CLASS_GROUPS = {};
 
 const DAYS = ['dushanba', 'seshanba', 'chorshanba', 'payshanba', 'juma'];
 const DAY_LABELS = { dushanba: 'Dushanba', seshanba: 'Seshanba', chorshanba: 'Chorshanba', payshanba: 'Payshanba', juma: 'Juma' };
@@ -332,9 +332,19 @@ function buildScheduleUI() {
   function renderTable() {
     const lessons = SCHEDULE[activeClass]?.[activeDay] || [];
     let rows = '';
+    let lessonCount = 0;
     lessons.forEach((lesson, i) => {
       const fan = lesson[0] || '—';
       const xona = lesson[1] || '—';
+      if (String(fan).toUpperCase() === 'TUSHLIK') {
+        rows += `<tr class="schedule-lunch-row">
+          <td class="td-num">${i + 1}</td>
+          <td class="td-time">${TIMES[i] || '—'}</td>
+          <td class="td-subject" colspan="2">Tushlik</td>
+        </tr>`;
+        return;
+      }
+      lessonCount += 1;
       rows += `<tr>
         <td class="td-num">${i + 1}</td>
         <td class="td-time">${TIMES[i] || '—'}</td>
@@ -347,7 +357,7 @@ function buildScheduleUI() {
       <div class="schedule-header-info">
         <span class="sched-class-label">${activeClass} sinf</span>
         <span class="sched-day-label">${DAY_LABELS[activeDay]}</span>
-        <span class="sched-count">${lessons.length} dars</span>
+        <span class="sched-count">${lessonCount} dars</span>
       </div>
       <table class="schedule-table-main">
         <thead><tr><th>#</th><th>Vaqt</th><th>Fan</th><th>Xona</th></tr></thead>
@@ -359,7 +369,53 @@ function buildScheduleUI() {
   renderTable();
 }
 
-buildScheduleUI();
+// Jadval CMS ma'lumotlari kelganda buildScheduleUI() orqali chiziladi
+
+
+// ===== CMS DAN JADVAL MA'LUMOTINI QABUL QILISH =====
+window.setScheduleData = function (schedule) {
+  if (!schedule || !Array.isArray(schedule.sections)) return;
+
+  const map = {};
+  const groups = {};
+
+  schedule.sections.forEach(section => {
+    (section.classes || []).forEach((name, classIndex) => {
+      const days = {};
+
+      (section.days || []).forEach(day => {
+        const key = String(day.name || '').toLowerCase();
+        const list = (day.lessons || [])
+          .slice()
+          .sort((a, b) => Number(a.no) - Number(b.no))
+          .map(lesson => {
+            const cell = lesson.cells && lesson.cells[classIndex] ? lesson.cells[classIndex] : {};
+            return [String(cell.subject || '').trim(), String(cell.room || '').trim()];
+          })
+          .filter(pair => pair[0]);
+
+        days[key] = list;
+      });
+
+      map[name] = days;
+      const grade = name.split('-')[0];
+      if (!groups[grade]) groups[grade] = [];
+      if (groups[grade].indexOf(name) === -1) groups[grade].push(name);
+    });
+  });
+
+  SCHEDULE = map;
+  CLASS_GROUPS = groups;
+
+  const grades = Object.keys(groups).sort((a, b) => Number(a) - Number(b));
+  if (!grades.length) return;
+
+  activeGrade = grades[0];
+  activeClass = groups[activeGrade][0];
+  activeDay = 'dushanba';
+
+  buildScheduleUI();
+};
 
 // ===== YANGILIKLAR FILTRLASH =====
 document.addEventListener('DOMContentLoaded', function () {
