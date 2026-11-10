@@ -94,15 +94,25 @@
     gap: 14px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   }
-  .news-item img { width: 90px; height: 90px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+  .news-item .main-thumb {
+    width: 90px; height: 90px; object-fit: cover; border-radius: 8px; flex-shrink: 0; display: block;
+  }
   .news-item .no-img {
     width: 90px; height: 90px; border-radius: 8px; flex-shrink: 0;
     background: var(--bg); display: flex; align-items: center; justify-content: center;
     color: #999; font-size: 0.75rem; text-align: center;
   }
-  .news-content { flex: 1; }
+  .news-content { flex: 1; min-width: 0; }
   .news-content h4 { color: var(--blue); margin-bottom: 6px; }
   .news-content p { font-size: 0.9rem; color: #555; }
+  .news-meta { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .count-badge {
+    background: rgba(11, 37, 69, 0.08); color: var(--blue);
+    font-size: 0.75rem; font-weight: 600; padding: 3px 9px; border-radius: 50px;
+  }
+  .news-date { font-size: 0.78rem; color: #888; }
+  .thumbs { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .thumbs img { width: 46px; height: 46px; object-fit: cover; border-radius: 6px; border: 1px solid #e7eaf0; }
   .news-actions { display: flex; gap: 8px; margin-top: 10px; }
   .news-actions button {
     border: none;
@@ -117,6 +127,70 @@
   .status-msg.success { color: #2a9d8f; }
   .status-msg.error { color: var(--danger); }
   #apiUrlNote { font-size: 0.8rem; color: #888; margin-top: 10px; text-align: center; }
+
+  /* Ko'p rasm yuklash */
+  .hint { font-weight: 400; color: #8a93a3; font-size: 0.8rem; }
+  .field label.upload-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 18px 12px;
+    border: 2px dashed #cbd5e1;
+    border-radius: 10px;
+    background: #fafbfd;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 400;
+    transition: border-color .15s, background .15s;
+  }
+  .field label.upload-box:hover, .field label.upload-box.dragover { border-color: var(--blue); background: #f2f6fc; }
+  .upload-box .upload-icon { font-size: 1.5rem; line-height: 1; }
+  .upload-box strong { color: var(--blue); font-size: 0.95rem; }
+  .upload-box small { color: #8a93a3; font-size: 0.78rem; }
+  .preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .preview-grid:empty { display: none; }
+  .preview-item {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #eef1f5;
+    border: 1px solid #e7eaf0;
+  }
+  .preview-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .preview-item .remove {
+    position: absolute;
+    top: 4px; right: 4px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(230, 57, 70, 0.92);
+    color: #fff;
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .preview-item .remove:hover { background: var(--danger); }
+  .preview-item .tag {
+    position: absolute;
+    left: 4px; bottom: 4px;
+    background: rgba(11, 37, 69, 0.75);
+    color: #fff;
+    font-size: 0.62rem;
+    padding: 2px 6px;
+    border-radius: 50px;
+  }
+  .counter { margin-top: 8px; font-size: 0.8rem; color: #8a93a3; }
+  .counter.full { color: var(--danger); }
 </style>
 </head>
 <body>
@@ -154,8 +228,18 @@
         <textarea id="newsText" placeholder="Yangilik matni..."></textarea>
       </div>
       <div class="field">
-        <label>Rasm</label>
-        <input type="file" id="newsImage" accept="image/*">
+        <label>Rasmlar <span class="hint">— bir nechta rasm tanlash mumkin (10 tagacha)</span></label>
+
+        <label class="upload-box" id="uploadBox" for="newsImages">
+          <span class="upload-icon">🖼️</span>
+          <strong>Rasm tanlash yoki bu yerga tashlash</strong>
+          <small>JPG, PNG, WEBP, GIF · har biri 5MB gacha · bir vaqtda bir nechta</small>
+        </label>
+        <input type="file" id="newsImages" accept="image/*" multiple hidden>
+
+        <div class="preview-grid" id="existingPreviews"></div>
+        <div class="preview-grid" id="newPreviews"></div>
+        <div class="counter" id="imagesCounter"></div>
       </div>
       <button class="btn-primary" onclick="submitNews()" id="submitBtn">Qo'shish</button>
       <button class="btn-primary" style="background:#888; margin-top:8px; display:none;" id="cancelEditBtn" onclick="cancelEdit()">Tahrirlashni bekor qilish</button>
@@ -169,12 +253,20 @@
 </div>
 
 <script>
-// Backend server manzili - ishlab chiqarishga qo'yganda o'zgartiring
-const API_URL = 'https://parkent-maktab-sayti.onrender.com';
+// Backend server manzili.
+// Mahalliy kompyuterda ochilganda lokal serverga, saytda esa Render'dagi serverga ulanadi.
+const API_URL = (['localhost', '127.0.0.1', ''].includes(location.hostname) || location.protocol === 'file:')
+  ? 'http://localhost:3000'
+  : 'https://parkent-maktab-sayti.onrender.com';
+const MAX_IMAGES = 10;
 document.getElementById('apiUrlDisplay').textContent = API_URL;
 
 let token = localStorage.getItem('admin_token') || null;
 let editingId = null;
+let allNews = [];
+// Tanlangan yangi fayllar va tahrirlashda qoldirilgan eski rasmlar
+let pendingFiles = [];
+let keptImages = [];
 
 function showApp() {
   document.getElementById('loginScreen').style.display = 'none';
@@ -218,29 +310,172 @@ function logout() {
   showLogin();
 }
 
+/* ============ RASMLAR BILAN ISHLASH ============ */
+
+// Yangilikdagi barcha rasmlar: yangi "gallery" yoki eski "image"
+function galleryOf(item) {
+  if (item && Array.isArray(item.gallery) && item.gallery.length) return item.gallery.slice();
+  if (item && item.image) return [item.image];
+  return [];
+}
+
+function imageUrl(path) {
+  return /^https?:\/\//.test(path) ? path : API_URL + path;
+}
+
+function updateCounter() {
+  const el = document.getElementById('imagesCounter');
+  const total = keptImages.length + pendingFiles.length;
+  el.textContent = total
+    ? `Tanlangan rasmlar: ${total} / ${MAX_IMAGES}`
+    : '';
+  el.classList.toggle('full', total >= MAX_IMAGES);
+}
+
+function renderPreviews() {
+  const existingEl = document.getElementById('existingPreviews');
+  const newEl = document.getElementById('newPreviews');
+  existingEl.innerHTML = '';
+  newEl.innerHTML = '';
+
+  // Serverda mavjud rasmlar (tahrirlash rejimida)
+  keptImages.forEach((src, index) => {
+    const box = document.createElement('div');
+    box.className = 'preview-item';
+
+    const img = document.createElement('img');
+    img.src = imageUrl(src);
+    img.alt = 'Mavjud rasm';
+    img.loading = 'lazy';
+
+    const tag = document.createElement('span');
+    tag.className = 'tag';
+    tag.textContent = 'Saqlangan';
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'remove';
+    btn.title = "Rasmni o'chirish";
+    btn.innerHTML = '&times;';
+    btn.onclick = () => {
+      keptImages.splice(index, 1);
+      renderPreviews();
+    };
+
+    box.append(img, tag, btn);
+    existingEl.appendChild(box);
+  });
+
+  // Yangi tanlangan fayllar
+  pendingFiles.forEach((file, index) => {
+    const box = document.createElement('div');
+    box.className = 'preview-item';
+
+    const img = document.createElement('img');
+    img.src = file._preview;
+    img.alt = file.name;
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'remove';
+    btn.title = 'Tanlovdan olib tashlash';
+    btn.innerHTML = '&times;';
+    btn.onclick = () => {
+      URL.revokeObjectURL(file._preview);
+      pendingFiles.splice(index, 1);
+      renderPreviews();
+    };
+
+    box.append(img, btn);
+    newEl.appendChild(box);
+  });
+
+  updateCounter();
+}
+
+function addFiles(fileList) {
+  const files = Array.from(fileList || []).filter((f) => f.type.startsWith('image/'));
+  if (!files.length) return;
+
+  const room = MAX_IMAGES - keptImages.length - pendingFiles.length;
+  if (room <= 0) {
+    setStatus(`Ko'pi bilan ${MAX_IMAGES} ta rasm yuklash mumkin`, true);
+    return;
+  }
+
+  const accepted = files.slice(0, room);
+  accepted.forEach((file) => {
+    file._preview = URL.createObjectURL(file);
+    pendingFiles.push(file);
+  });
+
+  if (files.length > accepted.length) {
+    setStatus(`Ba'zi rasmlar qo'shilmadi: limit ${MAX_IMAGES} ta`, true);
+  } else {
+    setStatus('');
+  }
+  renderPreviews();
+}
+
+function setStatus(message, isError) {
+  const el = document.getElementById('formStatus');
+  el.textContent = message || '';
+  el.className = 'status-msg' + (message ? (isError ? ' error' : ' success') : '');
+}
+
+function clearPending() {
+  pendingFiles.forEach((file) => URL.revokeObjectURL(file._preview));
+  pendingFiles = [];
+  document.getElementById('newsImages').value = '';
+}
+
+/* ============ YANGILIKLAR RO'YXATI ============ */
+
 async function loadNews() {
   const listEl = document.getElementById('newsList');
   listEl.innerHTML = 'Yuklanmoqda...';
   try {
     const res = await fetch(`${API_URL}/api/news`);
     const data = await res.json();
-    if (!data.news || data.news.length === 0) {
+    allNews = data.news || [];
+
+    if (!allNews.length) {
       listEl.innerHTML = '<p style="color:#888;">Hozircha yangiliklar yo\'q.</p>';
       return;
     }
-    listEl.innerHTML = data.news.map(item => `
-      <div class="news-item">
-        ${item.image ? `<img src="${API_URL}${item.image}" alt="">` : `<div class="no-img">Rasm yo'q</div>`}
-        <div class="news-content">
-          <h4>${escapeHtml(item.title)}</h4>
-          <p>${escapeHtml(item.text).slice(0, 120)}${item.text.length > 120 ? '...' : ''}</p>
-          <div class="news-actions">
-            <button class="btn-edit" onclick='startEdit(${JSON.stringify(item.id)}, ${JSON.stringify(item.title)}, ${JSON.stringify(item.text)})'>Tahrirlash</button>
-            <button class="btn-delete" onclick="deleteNews('${item.id}')">O'chirish</button>
+
+    listEl.innerHTML = allNews.map((item) => {
+      const gallery = galleryOf(item);
+      const first = gallery[0];
+      const extra = gallery.slice(1, 6)
+        .map((src) => `<img src="${imageUrl(src)}" alt="" loading="lazy">`)
+        .join('');
+      const dateText = item.createdAt
+        ? new Date(item.createdAt).toLocaleDateString('uz-UZ', { day: 'numeric', month: 'long', year: 'numeric' })
+        : '';
+      const textPreview = escapeHtml(item.text || '').slice(0, 120);
+
+      return `
+        <div class="news-item">
+          ${first
+            ? `<img class="main-thumb" src="${imageUrl(first)}" alt="" loading="lazy">`
+            : '<div class="no-img">Rasm yo\'q</div>'}
+          <div class="news-content">
+            <h4>${escapeHtml(item.title)}</h4>
+            <p>${textPreview}${(item.text || '').length > 120 ? '...' : ''}</p>
+            <div class="news-meta">
+              <span class="count-badge">🖼️ ${gallery.length} rasm</span>
+              ${dateText ? `<span class="news-date">${dateText}</span>` : ''}
+            </div>
+            ${extra ? `<div class="thumbs">${extra}</div>` : ''}
+            <div class="news-actions">
+              <button class="btn-edit" onclick="startEdit('${item.id}')">Tahrirlash</button>
+              <button class="btn-delete" onclick="deleteNews('${item.id}')">O'chirish</button>
+            </div>
           </div>
         </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   } catch (err) {
     listEl.innerHTML = '<p style="color:red;">Yuklashda xatolik.</p>';
   }
@@ -252,47 +487,61 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-function startEdit(id, title, text) {
+function startEdit(id) {
+  const item = allNews.find((n) => n.id === id);
+  if (!item) return;
+
   editingId = id;
-  document.getElementById('newsTitle').value = title;
-  document.getElementById('newsText').value = text;
-  document.getElementById('formTitle').textContent = "Yangilikni tahrirlash";
+  keptImages = galleryOf(item);
+  clearPending();
+
+  document.getElementById('newsTitle').value = item.title || '';
+  document.getElementById('newsText').value = item.text || '';
+  document.getElementById('formTitle').textContent = 'Yangilikni tahrirlash';
   document.getElementById('submitBtn').textContent = 'Saqlash';
   document.getElementById('cancelEditBtn').style.display = 'block';
+  setStatus('');
+  renderPreviews();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function cancelEdit() {
   editingId = null;
+  keptImages = [];
+  clearPending();
   document.getElementById('newsTitle').value = '';
   document.getElementById('newsText').value = '';
-  document.getElementById('newsImage').value = '';
   document.getElementById('formTitle').textContent = "Yangi yangilik qo'shish";
   document.getElementById('submitBtn').textContent = "Qo'shish";
   document.getElementById('cancelEditBtn').style.display = 'none';
+  setStatus('');
+  renderPreviews();
 }
 
 async function submitNews() {
   const title = document.getElementById('newsTitle').value.trim();
   const text = document.getElementById('newsText').value.trim();
-  const imageFile = document.getElementById('newsImage').files[0];
-  const statusEl = document.getElementById('formStatus');
-  statusEl.textContent = '';
-  statusEl.className = 'status-msg';
 
   if (!title || !text) {
-    statusEl.textContent = "Sarlavha va matnni to'ldiring";
-    statusEl.classList.add('error');
+    setStatus("Sarlavha va matnni to'ldiring", true);
     return;
   }
 
   const formData = new FormData();
   formData.append('title', title);
   formData.append('text', text);
-  if (imageFile) formData.append('image', imageFile);
+  pendingFiles.forEach((file) => formData.append('images', file));
+  if (editingId) {
+    // Qaysi eski rasmlar qoldirilishini serverga aytamiz
+    formData.append('keepImages', JSON.stringify(keptImages));
+  }
 
+  const wasEditing = Boolean(editingId);
   const url = editingId ? `${API_URL}/api/news/${editingId}` : `${API_URL}/api/news`;
   const method = editingId ? 'PUT' : 'POST';
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.disabled = true;
+  setStatus("Yuborilmoqda...", false);
 
   try {
     const res = await fetch(url, {
@@ -303,17 +552,17 @@ async function submitNews() {
     const data = await res.json();
     if (!res.ok) {
       if (res.status === 401) { logout(); return; }
-      statusEl.textContent = data.error || 'Xatolik yuz berdi';
-      statusEl.classList.add('error');
+      setStatus(data.error || 'Xatolik yuz berdi', true);
       return;
     }
-    statusEl.textContent = editingId ? 'Yangilandi!' : "Qo'shildi!";
-    statusEl.classList.add('success');
+
     cancelEdit();
+    setStatus(wasEditing ? 'Yangilandi!' : "Qo'shildi!", false);
     loadNews();
   } catch (err) {
-    statusEl.textContent = "Serverga ulanib bo'lmadi";
-    statusEl.classList.add('error');
+    setStatus("Serverga ulanib bo'lmadi", true);
+  } finally {
+    submitBtn.disabled = false;
   }
 }
 
@@ -330,6 +579,34 @@ async function deleteNews(id) {
     alert("O'chirishda xatolik yuz berdi");
   }
 }
+
+/* ============ FAYL TANLASH ============ */
+
+const fileInput = document.getElementById('newsImages');
+fileInput.addEventListener('change', (event) => {
+  addFiles(event.target.files);
+  event.target.value = ''; // bir xil faylni qayta tanlash mumkin bo'lishi uchun
+});
+
+// Drag & drop
+const uploadBox = document.getElementById('uploadBox');
+['dragenter', 'dragover'].forEach((name) => {
+  uploadBox.addEventListener(name, (e) => {
+    e.preventDefault();
+    uploadBox.classList.add('dragover');
+  });
+});
+['dragleave', 'drop'].forEach((name) => {
+  uploadBox.addEventListener(name, (e) => {
+    e.preventDefault();
+    uploadBox.classList.remove('dragover');
+  });
+});
+uploadBox.addEventListener('drop', (e) => {
+  if (e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files);
+});
+
+renderPreviews();
 
 // Sahifa yuklanganda token borligini tekshiramiz
 if (token) {

@@ -3,6 +3,10 @@ const path = require('path');
 
 const DB_PATH = path.join(__dirname, '..', 'data', 'news.json');
 
+// "data" papkasi bo'lmasa (masalan, yangi serverda) avtomatik yaratamiz
+const DB_DIR = path.dirname(DB_PATH);
+if (!fs.existsSync(DB_DIR)) fs.mkdirSync(DB_DIR, { recursive: true });
+
 // Yozish navbati - bir vaqtda bir nechta yozish bo'lib, fayl buzilib qolmasligi uchun
 let writeQueue = Promise.resolve();
 
@@ -17,15 +21,17 @@ function readAll() {
 }
 
 function writeAll(data) {
-  writeQueue = writeQueue.then(
-    () =>
-      new Promise((resolve, reject) => {
-        fs.writeFile(DB_PATH, JSON.stringify(data, null, 2), 'utf-8', (err) => {
-          if (err) reject(err);
-          else resolve();
-        });
-      })
-  );
+  writeQueue = writeQueue
+    .catch(() => {}) // oldingi yozish xato bo'lsa ham navbat davom etsin
+    .then(
+      () =>
+        new Promise((resolve, reject) => {
+          fs.writeFile(DB_PATH, JSON.stringify(data, null, 2), 'utf-8', (err) => {
+            if (err) reject(err);
+            else resolve();
+          });
+        })
+    );
   return writeQueue;
 }
 

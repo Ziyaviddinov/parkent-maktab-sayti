@@ -27,7 +27,10 @@ function fileFilter(req, file, cb) {
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB maksimal
+  limits: {
+    fileSize: 5 * 1024 * 1024, // har bir rasm uchun 5MB maksimal
+    files: 12, // bitta so'rovda ko'pi bilan 12 ta fayl (10 ta rasm + zaxira)
+  },
 });
 
 module.exports = upload;
