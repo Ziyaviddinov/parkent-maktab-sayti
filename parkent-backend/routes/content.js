@@ -11,6 +11,17 @@ const { readContent, writeContent, makeId, DEFAULT_CONTENT } = require('../utils
 const COLLECTIONS = {
   teachers: ['name', 'subject', 'group', 'category', 'specialty', 'education', 'phone', 'order'],
   leadership: ['name', 'role', 'bio', 'phone', 'order'],
+  staff: ['name', 'position', 'phone', 'bio', 'order'],
+  faq: ['question', 'answer', 'order'],
+  features: ['icon', 'title', 'text', 'order'],
+};
+
+const REQUIRED_FIELDS = {
+  teachers: 'name',
+  leadership: 'name',
+  staff: 'name',
+  faq: 'question',
+  features: 'title',
 };
 
 function removeUploadedFile(file) {
@@ -148,6 +159,25 @@ router.put('/schedule', authMiddleware, (req, res) => {
     });
 });
 
+// PUT /api/content/admission - qabul sahifalari matnlari (faqat admin)
+router.put('/admission', authMiddleware, (req, res) => {
+  const admission = req.body && req.body.admission;
+
+  if (!admission || typeof admission !== 'object' || Array.isArray(admission)) {
+    return res.status(400).json({ error: "Ma'lumot noto'g'ri" });
+  }
+
+  const content = readContent();
+  content.admission = admission;
+
+  writeContent(content)
+    .then(() => res.json({ success: true }))
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ error: 'Saqlashda xatolik yuz berdi' });
+    });
+});
+
 // POST /api/content/:collection - yangi element qo'shish (faqat admin)
 router.post('/:collection', authMiddleware, upload.single('photo'), (req, res) => {
   const collection = req.params.collection;
@@ -158,9 +188,10 @@ router.post('/:collection', authMiddleware, upload.single('photo'), (req, res) =
     return res.status(404).json({ error: "Bunday bo'lim topilmadi" });
   }
 
-  if (!req.body.name || !req.body.name.trim()) {
+  const requiredField = REQUIRED_FIELDS[collection];
+  if (!req.body[requiredField] || !String(req.body[requiredField]).trim()) {
     removeUploadedFile(req.file);
-    return res.status(400).json({ error: 'Ism kiritilishi shart' });
+    return res.status(400).json({ error: "Asosiy maydonni to'ldiring" });
   }
 
   const content = readContent();

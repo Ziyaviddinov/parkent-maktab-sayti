@@ -3,7 +3,7 @@
     "schoolName": "Parkent tuman ixtisoslashtirilgan maktabi",
     "phone": "+998 99 612 51 80",
     "email": "pimaparkent@gmail.com",
-    "address": "Toshkent viloyati, Parkent tumani",
+    "address": "Parkent tumani",
     "telegram": "https://t.me/Parkent_tuman_IM",
     "instagram": "https://www.instagram.com/parkent_pima",
     "facebook": "https://www.facebook.com/groups/1553604381759572/",
@@ -11,6 +11,152 @@
   },
   "teachers": [],
   "leadership": [],
+  "staff": [],
+  "faq": [
+    {
+      "id": "q_1",
+      "question": "Qabul hujjatlarini qachon topshirish mumkin?",
+      "answer": "Hujjatlar har yili 1-may dan 15-iyungacha onlayn yoki maktab qabul bo'limi orqali qabul qilinadi. Aniq sanalar har yili veb-sahifada e'lon qilinadi."
+    },
+    {
+      "id": "q_2",
+      "question": "Imtihonga qanday tayyorlanish kerak?",
+      "answer": "Imtihon ona tili, matematika va mantiqiy fikrlash bo'yicha o'tkaziladi. Maxsus tayyorgarlik dasturlari yoki namunaviy testlar haqida qabul bo'limidan so'rashingiz mumkin."
+    },
+    {
+      "id": "q_3",
+      "question": "Boshqa hududdan o'quvchi qabul qilinadimi?",
+      "answer": "Ha, bo'sh o'rinlar mavjud bo'lganda boshqa hududlardan bo'lgan o'quvchilar ham umumiy tartibda imtihon orqali qabul qilinishi mumkin."
+    },
+    {
+      "id": "q_4",
+      "question": "Ta'lim haqiqatan ham bepulmi?",
+      "answer": "Ha, maktabimiz davlat ta'lim muassasasi bo'lib, asosiy o'quv dasturi bepul. Faqat ovqatlanish, transport kabi ba'zi qo'shimcha xizmatlar ixtiyoriy to'lov asosida."
+    },
+    {
+      "id": "q_5",
+      "question": "O'quv yili davomida ko'chib o'tish mumkinmi?",
+      "answer": "Bo'sh o'rin mavjud bo'lgan taqdirda, ko'chib o'tish so'rovlari Kuzatuv kengashi roziligi bilan ko'rib chiqiladi."
+    },
+    {
+      "id": "q_6",
+      "question": "Qabul natijalarini qayerdan bilsam bo'ladi?",
+      "answer": "Natijalar maktab rasmiy veb-sahifasida va Telegram kanalida belgilangan sanada e'lon qilinadi, shuningdek SMS orqali ham xabar beriladi."
+    }
+  ],
+  "features": [
+    {
+      "id": "f_1",
+      "icon": "fa-flask",
+      "title": "Zamonaviy Laboratoriya",
+      "text": "Kimyo va biologiya fanlari uchun eng so'nggi jihozlangan laboratoriyalar."
+    },
+    {
+      "id": "f_2",
+      "icon": "fa-medal",
+      "title": "IELTS Markazi",
+      "text": "Ingliz tili imtihoniga tayyorgarlik va band score oshirish kurslari."
+    },
+    {
+      "id": "f_3",
+      "icon": "fa-trophy",
+      "title": "Sport Majmuasi",
+      "text": "O'quvchilarning jismoniy salomatligi uchun barcha sharoitlar mavjud."
+    },
+    {
+      "id": "f_4",
+      "icon": "fa-book-open-reader",
+      "title": "Kutubxona",
+      "text": "Zamonaviy kutubxona — elektron va bosma resurslar to'plami."
+    },
+    {
+      "id": "f_5",
+      "icon": "fa-location-dot",
+      "title": "Qulay lokatsiya",
+      "text": "Maktab qulay va yetib borish oson bo'lgan hududda joylashgan."
+    },
+    {
+      "id": "f_6",
+      "icon": "fa-dumbbell",
+      "title": "Work-out zona",
+      "text": "O'quvchilar uchun jihozlangan zamonaviy mashqlar maydonchasi."
+    },
+    {
+      "id": "f_7",
+      "icon": "fa-microchip",
+      "title": "Zamonaviy IT xonalar",
+      "text": "Eng so'nggi texnika bilan jihozlangan kompyuter va IT sinflari."
+    },
+    {
+      "id": "f_8",
+      "icon": "fa-robot",
+      "title": "Robototexnika mashg'ulotlari",
+      "text": "O'quvchilar uchun robototexnika va dasturlash bo'yicha amaliy darslar."
+    },
+    {
+      "id": "f_9",
+      "icon": "fa-pen-to-square",
+      "title": "SAT-ga tayyorlov",
+      "text": "Xalqaro SAT imtihoniga tayyorgarlik ko'rish uchun maxsus kurslar."
+    },
+    {
+      "id": "f_10",
+      "icon": "fa-palette",
+      "title": "ART to'garaklari",
+      "text": "O'quvchilarning ijodiy salohiyatini rivojlantiruvchi rasm chizish va san'at to'garaklari."
+    }
+  ],
+  "admission": {
+    "siyosati": {
+      "title": "Qabul siyosati",
+      "subtitle": "Parkent Ixtisoslashtirilgan maktabi qabul jarayonini quyidagi asosiy tamoyillarga tayanib tashkil etadi.",
+      "blocks": [
+        {
+          "title": "Adolat",
+          "text": "Barcha nomzodlar bir xil shart va mezonlar asosida baholanadi. Qabul faqat o'quvchining bilim darajasi va test natijalariga tayanadi."
+        },
+        {
+          "title": "Shaffoflik",
+          "text": "Qabul bosqichlari, muddatlari va talablari oldindan ochiq e'lon qilinadi. Ariza topshirishdan natijalar e'lon qilinishigacha bo'lgan barcha jarayon aniq tartib-qoidalarga asoslanadi."
+        },
+        {
+          "title": "Teng imkoniyat",
+          "text": "Belgilangan hududda ro'yxatdan o'tgan barcha nomzodlar, ijtimoiy kelib chiqishi, jinsi yoki boshqa holatidan qat'i nazar, bir xil sharoitda qabul jarayonida ishtirok etish huquqiga ega."
+        },
+        {
+          "title": "Malakaviylik",
+          "text": "Qabul faqat kvota doirasida, eng yuqori natija ko'rsatgan o'quvchilar asosida amalga oshiriladi."
+        }
+      ]
+    },
+    "jarayoni": {
+      "title": "Qabul jarayoni",
+      "subtitle": "Parkent Ixtisoslashtirilgan maktabiga qabul asosan 5-sinf o'quvchilari uchun ochiq bo'lib, ayrim hollarda 7-sinfga, shuningdek boshqa sinflarda bo'sh (vakant) o'rinlar mavjud bo'lganda ham qabul e'lon qilinishi mumkin. Qabul cheklangan kvota asosida, ikki bosqichda amalga oshiriladi.",
+      "blocks": [
+        {
+          "title": "Onlayn ariza topshirish",
+          "text": "May–iyun oylarida, 3 hafta davomida onlayn tarzda ariza qabul qilinadi."
+        },
+        {
+          "title": "Test sinovi",
+          "text": "Ariza topshirgan o'quvchilar test imtihonidan o'tkaziladi. Eng yuqori ball to'plagan o'quvchilargina maktabga qabul qilinadi."
+        },
+        {
+          "title": "Muddat",
+          "text": "Qabul jarayonlari har yili may–iyun oylarida o'tkaziladi."
+        },
+        {
+          "title": "Hududiy talab",
+          "text": "Hujjat topshirish faqat Toshkent viloyatida doimiy ro'yxatdan o'tgan fuqarolar uchun mumkin. Istisno tartibida boshqa hududdan bo'lgan o'quvchilar ham qabul qilinishi mumkin."
+        }
+      ]
+    },
+    "imtihonlari": {
+      "title": "Qabul imtihonlari",
+      "subtitle": "Imtihon nomzodlarning bilim darajasi va mantiqiy fikrlash qobiliyatini xolisona baholash maqsadida o'tkaziladi.",
+      "blocks": []
+    }
+  },
   "pages": {},
   "schedule": {
     "title": "II chorak 2025-2026 o'quv yili",
@@ -1794,31 +1940,346 @@
             "lessons": [
               {
                 "no": 1,
-                "cells": []
+                "cells": [
+                  {
+                    "subject": "Kelajak soati",
+                    "room": "2-01."
+                  },
+                  {
+                    "subject": "Kelajak soati",
+                    "room": "3-14."
+                  },
+                  {
+                    "subject": "Kelajak soati",
+                    "room": "3-07."
+                  },
+                  {
+                    "subject": "Kelajak soati",
+                    "room": "2-15."
+                  },
+                  {
+                    "subject": "Kelajak soati",
+                    "room": "3-01."
+                  },
+                  {
+                    "subject": "Kelajak soati",
+                    "room": "1-08."
+                  },
+                  {
+                    "subject": "Kelajak soati",
+                    "room": "1-01."
+                  },
+                  {
+                    "subject": "Kelajak soati",
+                    "room": "2-04."
+                  },
+                  {
+                    "subject": "Kelajak soati",
+                    "room": "1-09."
+                  },
+                  {
+                    "subject": "Kelajak soati",
+                    "room": "1-09."
+                  },
+                  {
+                    "subject": "Kelajak soati",
+                    "room": "1-02."
+                  }
+                ]
               },
               {
                 "no": 2,
-                "cells": []
+                "cells": [
+                  {
+                    "subject": "Jismoniy tarbiya",
+                    "room": "sport zali"
+                  },
+                  {
+                    "subject": "Rus tili",
+                    "room": "1-1-02. 1-1-04."
+                  },
+                  {
+                    "subject": "Ingliz tili",
+                    "room": "3-01. 3-07."
+                  },
+                  {
+                    "subject": "Algebra",
+                    "room": "3-09. 3-13."
+                  },
+                  {
+                    "subject": "O'zbekiston tarixi",
+                    "room": "2-17."
+                  },
+                  {
+                    "subject": "Kimyo",
+                    "room": "1-01. 1-03."
+                  },
+                  {
+                    "subject": "Ona tili",
+                    "room": "2-15."
+                  },
+                  {
+                    "subject": "Fizika",
+                    "room": "2-04. 2-06."
+                  },
+                  {
+                    "subject": "Jahon tarixi",
+                    "room": "2-09."
+                  },
+                  {
+                    "subject": "Adabiyot",
+                    "room": "2-15."
+                  },
+                  {
+                    "subject": "Adabiyot",
+                    "room": "2-12."
+                  }
+                ]
               },
               {
                 "no": 3,
-                "cells": []
+                "cells": [
+                  {
+                    "subject": "Geometriya",
+                    "room": "2-08. 3-11."
+                  },
+                  {
+                    "subject": "Adabiyot",
+                    "room": "2-13."
+                  },
+                  {
+                    "subject": "Ona tili",
+                    "room": "2-15."
+                  },
+                  {
+                    "subject": "Informatika",
+                    "room": "2-02. 2-03."
+                  },
+                  {
+                    "subject": "Informatika",
+                    "room": "2-00. 2-01."
+                  },
+                  {
+                    "subject": "Tarbiya",
+                    "room": "1-11."
+                  },
+                  {
+                    "subject": "Rus tili",
+                    "room": "1-1-01. 1-1-05."
+                  },
+                  {
+                    "subject": "Geometriya",
+                    "room": "3-09. 3-11."
+                  },
+                  {
+                    "subject": "O'zbekiston tarixi",
+                    "room": "2-09."
+                  },
+                  {
+                    "subject": "Algebra",
+                    "room": "1-04. 2-08."
+                  },
+                  {
+                    "subject": "Ingliz tili",
+                    "room": "3-05."
+                  }
+                ]
               },
               {
                 "no": 4,
-                "cells": []
+                "cells": [
+                  {
+                    "subject": "Geografiya",
+                    "room": "1-1-03."
+                  },
+                  {
+                    "subject": "Algebra",
+                    "room": "3-12. 2-08."
+                  },
+                  {
+                    "subject": "Informatika",
+                    "room": "2-02. 2-03."
+                  },
+                  {
+                    "subject": "Ingliz tili",
+                    "room": "3-03. 3-06."
+                  },
+                  {
+                    "subject": "Fizika",
+                    "room": "2-06. 2-07."
+                  },
+                  {
+                    "subject": "Adabiyot",
+                    "room": "2-13."
+                  },
+                  {
+                    "subject": "Fizika",
+                    "room": "2-04. 2-05."
+                  },
+                  {
+                    "subject": "Rus tili",
+                    "room": "1-1-01. 1-1-05."
+                  },
+                  {
+                    "subject": "CHYOT",
+                    "room": "2-11."
+                  },
+                  {
+                    "subject": "Biologiya",
+                    "room": "1-06. 1-08."
+                  },
+                  {
+                    "subject": "Kimyo",
+                    "room": "1-02."
+                  }
+                ]
               },
               {
                 "no": 5,
-                "cells": []
+                "cells": [
+                  {
+                    "subject": "Ingliz tili",
+                    "room": "3-03. 3-05."
+                  },
+                  {
+                    "subject": "Ingliz tili",
+                    "room": "3-04. 3-06."
+                  },
+                  {
+                    "subject": "Algebra",
+                    "room": "2-08. 3-10."
+                  },
+                  {
+                    "subject": "CHYOT",
+                    "room": "2-11."
+                  },
+                  {
+                    "subject": "Algebra",
+                    "room": "3-08. 3-12."
+                  },
+                  {
+                    "subject": "Biologiya",
+                    "room": "1-06. 1-08."
+                  },
+                  {
+                    "subject": "Adabiyot",
+                    "room": "2-15."
+                  },
+                  {
+                    "subject": "Algebra",
+                    "room": "3-09. 3-11."
+                  },
+                  {
+                    "subject": "Fizika",
+                    "room": "2-05. 2-07."
+                  },
+                  {
+                    "subject": "Kimyo",
+                    "room": "1-01. 1-03."
+                  },
+                  {
+                    "subject": "Kimyo",
+                    "room": "1-02."
+                  }
+                ]
               },
               {
                 "no": 6,
-                "cells": []
+                "cells": [
+                  {
+                    "subject": "Tarbiya",
+                    "room": "1-11."
+                  },
+                  {
+                    "subject": "Geometriya",
+                    "room": "3-01. 3-12."
+                  },
+                  {
+                    "subject": "Fizika",
+                    "room": "2-04. 2-05."
+                  },
+                  {
+                    "subject": "Fizika",
+                    "room": "2-06. 2-07."
+                  },
+                  {
+                    "subject": "Adabiyot",
+                    "room": "2-10."
+                  },
+                  {
+                    "subject": "Algebra",
+                    "room": "1-05."
+                  },
+                  {
+                    "subject": "Algebra",
+                    "room": "2-08. 3-10."
+                  },
+                  {
+                    "subject": "O'zbekiston tarixi",
+                    "room": "2-17."
+                  },
+                  {
+                    "subject": "Informatika",
+                    "room": "2-02 2-03."
+                  },
+                  {
+                    "subject": "O'zbekiston tarixi",
+                    "room": "2-09."
+                  },
+                  {
+                    "subject": "Biologiya",
+                    "room": "1-08."
+                  }
+                ]
               },
               {
                 "no": 7,
-                "cells": []
+                "cells": [
+                  {
+                    "subject": "San'at",
+                    "room": "1-09."
+                  },
+                  {
+                    "subject": "O'zbekiston tarixi",
+                    "room": "2-16."
+                  },
+                  {
+                    "subject": "",
+                    "room": ""
+                  },
+                  {
+                    "subject": "Geometriya",
+                    "room": "3-08. 3-09."
+                  },
+                  {
+                    "subject": "CHYOT",
+                    "room": "2-11."
+                  },
+                  {
+                    "subject": "Kimyo",
+                    "room": "1-01. 1-03."
+                  },
+                  {
+                    "subject": "",
+                    "room": ""
+                  },
+                  {
+                    "subject": "Ingliz tili",
+                    "room": "3-03. 3-05."
+                  },
+                  {
+                    "subject": "",
+                    "room": ""
+                  },
+                  {
+                    "subject": "Tarbiya",
+                    "room": "1-11."
+                  },
+                  {
+                    "subject": "Geometriya",
+                    "room": "3-12."
+                  }
+                ]
               }
             ]
           },

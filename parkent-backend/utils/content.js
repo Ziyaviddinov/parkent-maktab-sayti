@@ -19,6 +19,10 @@ const DEFAULT_CONTENT = {
   },
   teachers: [],
   leadership: [],
+  staff: [],
+  faq: [],
+  features: [],
+  admission: {},
   pages: {},
   schedule: null,
   about: {
@@ -58,6 +62,10 @@ function readContent() {
       settings: { ...clone(DEFAULT_CONTENT.settings), ...(parsed.settings || {}) },
       teachers: Array.isArray(parsed.teachers) ? parsed.teachers : [],
       leadership: Array.isArray(parsed.leadership) ? parsed.leadership : [],
+      staff: Array.isArray(parsed.staff) ? parsed.staff : [],
+      faq: Array.isArray(parsed.faq) ? parsed.faq : [],
+      features: Array.isArray(parsed.features) ? parsed.features : [],
+      admission: parsed.admission && typeof parsed.admission === 'object' ? parsed.admission : {},
       pages: parsed.pages && typeof parsed.pages === 'object' ? parsed.pages : {},
       about: { ...clone(DEFAULT_CONTENT.about), ...(parsed.about || {}) },
       schedule: parsed.schedule && typeof parsed.schedule === 'object' ? parsed.schedule : null

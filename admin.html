@@ -327,6 +327,11 @@
       <button class="tab-btn" data-tab="leadership" onclick="switchTab('leadership')">🏛️ Rahbariyat</button>
       <button class="tab-btn" data-tab="about" onclick="switchTab('about')">🏫 Maktab haqida</button>
       <button class="tab-btn" data-tab="schedule" onclick="switchTab('schedule')">📅 Dars jadvali</button>
+      <button class="tab-btn" data-tab="staff" onclick="switchTab('staff')">🧑‍💼 Xodimlar</button>
+      <button class="tab-btn" data-tab="faq" onclick="switchTab('faq')">❓ Savollar</button>
+      <button class="tab-btn" data-tab="features" onclick="switchTab('features')">✨ Afzalliklar</button>
+      <button class="tab-btn" data-tab="admission" onclick="switchTab('admission')">🎓 Qabul</button>
+      <button class="tab-btn" data-tab="settings" onclick="switchTab('settings')">⚙️ Sozlamalar</button>
     </div>
   </div>
 
@@ -545,6 +550,91 @@
 
       <button class="btn-primary" onclick="saveSchedule()" id="sSaveBtn">Jadvalni saqlash</button>
       <div class="status-msg" id="sStatus"></div>
+    </div>
+  </div>
+
+  <!-- ================= XODIMLAR ================= -->
+  <div class="container pane" id="paneStaff">
+    <div class="card-form" id="staffFormCard"></div>
+    <h3 class="pane-title">Xodimlar ro'yxati</h3>
+    <div class="cms-list" id="staffList"></div>
+  </div>
+
+  <!-- ================= SAVOLLAR ================= -->
+  <div class="container pane" id="paneFaq">
+    <div class="card-form" id="faqFormCard"></div>
+    <h3 class="pane-title">Savollar ro'yxati</h3>
+    <div class="cms-list" id="faqList"></div>
+  </div>
+
+  <!-- ================= AFZALLIKLAR ================= -->
+  <div class="container pane" id="paneFeatures">
+    <div class="card-form" id="featuresFormCard"></div>
+    <h3 class="pane-title">Afzalliklar ro'yxati</h3>
+    <div class="cms-list" id="featuresList"></div>
+  </div>
+
+  <!-- ================= QABUL SAHIFALARI ================= -->
+  <div class="container pane" id="paneAdmission">
+    <div class="card-form">
+      <h3>Qabul sahifalari matnlari</h3>
+      <div class="field">
+        <label>Sahifa</label>
+        <select id="admPage" onchange="switchAdmissionPage()">
+          <option value="siyosati">Qabul siyosati</option>
+          <option value="jarayoni">Qabul jarayoni</option>
+          <option value="imtihonlari">Qabul imtihonlari</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Sarlavha</label>
+        <input type="text" id="admTitle">
+      </div>
+      <div class="field">
+        <label>Qisqa izoh</label>
+        <textarea id="admSubtitle" style="min-height: 70px;"></textarea>
+      </div>
+      <div class="field">
+        <label>Bloklar <span class="hint">(sarlavha + matn)</span></label>
+        <div id="admBlocks"></div>
+        <button class="btn-primary" style="background:#5b6b82; margin-top:8px;" onclick="addAdmissionBlock()">+ Blok qo'shish</button>
+      </div>
+      <button class="btn-primary" onclick="saveAdmission()" id="admSaveBtn">Saqlash</button>
+      <div class="status-msg" id="admStatus"></div>
+    </div>
+  </div>
+
+  <!-- ================= SOZLAMALAR ================= -->
+  <div class="container pane" id="paneSettings">
+    <div class="card-form">
+      <h3>Sayt sozlamalari</h3>
+      <p class="empty-note" style="margin-bottom:14px;">Bu ma'lumotlar barcha sahifalardagi aloqa blokida va ijtimoiy tarmoq havolalarida ko'rinadi.</p>
+
+      <div class="form-grid">
+        <div class="field">
+          <label>Telefon</label>
+          <input type="text" id="setPhone" placeholder="+998 99 612 51 80">
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="text" id="setEmail" placeholder="pimaparkent@gmail.com">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Manzil</label>
+        <input type="text" id="setAddress" placeholder="Toshkent viloyati, Parkent tumani">
+      </div>
+
+      <div class="form-grid">
+        <div class="field"><label>Telegram</label><input type="text" id="setTelegram"></div>
+        <div class="field"><label>Instagram</label><input type="text" id="setInstagram"></div>
+        <div class="field"><label>Facebook</label><input type="text" id="setFacebook"></div>
+        <div class="field"><label>YouTube</label><input type="text" id="setYoutube"></div>
+      </div>
+
+      <button class="btn-primary" onclick="saveSettings()" id="setSaveBtn">Saqlash</button>
+      <div class="status-msg" id="setStatus"></div>
     </div>
   </div>
 </div>
@@ -969,10 +1059,18 @@ async function loadContent() {
     contentCache.leadership = Array.isArray(data.leadership) ? data.leadership : [];
     contentCache.about = data.about || null;
     scheduleData = data.schedule || null;
+    contentCache.settings = data.settings || {};
+    contentCache.staff = Array.isArray(data.staff) ? data.staff : [];
+    contentCache.faq = Array.isArray(data.faq) ? data.faq : [];
+    contentCache.features = Array.isArray(data.features) ? data.features : [];
+    contentCache.admission = data.admission || {};
     renderTeachersList();
     renderLeadershipList();
     renderAboutForm();
     renderScheduleAdmin();
+    loadLists();
+    renderAdmissionForm();
+    renderSettingsForm();
     if (!scheduleData) loadStaticScheduleForAdmin();
   } catch (err) {
     console.log('Kontentni yuklab bo\'lmadi:', err.message);
@@ -1540,14 +1638,20 @@ function parseScheduleWorkbook(workbook) {
       if (dayName && !/^d\s*a\s*r\s*s/i.test(dayName) && !/^maktab/i.test(dayName)) {
         current = { name: dayName.charAt(0).toUpperCase() + dayName.slice(1), lessons: [] };
         days.push(current);
+      } else if (dayName) {
+        current = null;
+      }
+
+      // Sinf nomlari (5-A, 10-B ...) har qanday varaqda avtomatik aniqlanadi
+      if (!classes.length) {
+        const candidates = [];
+        for (let c = 2; c < cells.length; c += 2) {
+          if (/^\d{1,2}-[A-Z]$/.test(cells[c])) candidates.push(cells[c]);
+        }
+        if (candidates.length >= 2) classes.push(...candidates);
       }
 
       if ((cells[1] || '').trim() === 'T.r') {
-        if (!classes.length) {
-          for (let c = 2; c < cells.length; c += 2) {
-            if (cells[c]) classes.push(cells[c]);
-          }
-        }
         return;
       }
 
@@ -1615,7 +1719,392 @@ async function loadStaticScheduleForAdmin() {
   }
 }
 
+/* ================= UNIVERSAL RO'YXAT BO'LIMLARI ================= */
+
+const LIST_SECTIONS = {
+  staff: {
+    formTitle: "Yangi xodim qo'shish",
+    editTitle: "Xodimni tahrirlash",
+    fields: [
+      { name: 'name', label: 'F.I.SH', required: true, placeholder: 'F.I.Sh.' },
+      { name: 'position', label: 'Lavozimi', placeholder: 'Kutubxonachi' },
+      { name: 'phone', label: 'Telefon', placeholder: '+998 90 000 00 00' },
+      { name: 'bio', label: "Qisqacha ma'lumot", type: 'textarea' }
+    ],
+    photo: true,
+    primary: (item) => item.name,
+    secondary: (item) => item.position
+  },
+  faq: {
+    formTitle: "Yangi savol qo'shish",
+    editTitle: 'Savolni tahrirlash',
+    fields: [
+      { name: 'question', label: 'Savol', required: true, placeholder: "Qabul hujjatlarini qachon topshirish mumkin?" },
+      { name: 'answer', label: 'Javob', type: 'textarea' }
+    ],
+    photo: false,
+    primary: (item) => item.question,
+    secondary: (item) => item.answer
+  },
+  features: {
+    formTitle: "Yangi afzallik qo'shish",
+    editTitle: 'Afzallikni tahrirlash',
+    fields: [
+      { name: 'title', label: 'Sarlavha', required: true, placeholder: 'Zamonaviy Laboratoriya' },
+      { name: 'icon', label: 'Ikonka klassi', placeholder: 'fa-flask' },
+      { name: 'text', label: 'Matn', type: 'textarea' }
+    ],
+    photo: false,
+    primary: (item) => item.title,
+    secondary: (item) => item.text
+  }
+};
+
+const listData = { staff: [], faq: [], features: [] };
+const listEditing = { staff: null, faq: null, features: null };
+
+function initListSections() {
+  Object.keys(LIST_SECTIONS).forEach(buildListForm);
+}
+
+function buildListForm(key) {
+  const cfg = LIST_SECTIONS[key];
+  const card = document.getElementById(key + 'FormCard');
+  if (!card) return;
+
+  const fields = cfg.fields.map((field) => {
+    const id = key + '_' + field.name;
+    const label = '<label>' + field.label + (field.required ? ' *' : '') + '</label>';
+    const input = field.type === 'textarea'
+      ? '<textarea id="' + id + '" placeholder="' + (field.placeholder || '') + '"></textarea>'
+      : '<input type="text" id="' + id + '" placeholder="' + (field.placeholder || '') + '">';
+    return '<div class="field">' + label + input + '</div>';
+  }).join('');
+
+  let html = '<h3 id="' + key + 'FormTitle">' + cfg.formTitle + '</h3>';
+  html += '<div class="form-grid">' + fields + '</div>';
+
+  if (cfg.photo) {
+    html += '<div class="field"><label>Rasm (ixtiyoriy)</label>' +
+      '<input type="file" id="' + key + '_photo" accept="image/*">' +
+      '<div class="photo-preview" id="' + key + 'Preview"></div></div>';
+  }
+
+  html += '<button class="btn-primary" onclick="saveListItem(\'' + key + '\')" id="' + key + 'SaveBtn">Qo\'shish</button>';
+  html += '<button class="btn-primary" style="background:#888; margin-top:8px; display:none;" id="' + key + 'CancelBtn" onclick="cancelListItem(\'' + key + '\')">Bekor qilish</button>';
+  html += '<div class="status-msg" id="' + key + 'Status"></div>';
+
+  card.innerHTML = html;
+
+  if (cfg.photo) {
+    document.getElementById(key + '_photo').addEventListener('change', function () {
+      showPreview(key + 'Preview', this.files[0]);
+    });
+  }
+}
+
+function loadLists() {
+  Object.keys(LIST_SECTIONS).forEach((key) => {
+    listData[key] = Array.isArray(contentCache[key]) ? contentCache[key] : [];
+    renderList(key);
+  });
+}
+
+function renderList(key) {
+  const cfg = LIST_SECTIONS[key];
+  const el = document.getElementById(key + 'List');
+  if (!el) return;
+
+  if (!listData[key].length) {
+    el.innerHTML = '<p class="empty-note">Hozircha yozuv yo\'q. Saytda eski (qo\'lda yozilgan) ro\'yxat ko\'rinadi.</p>';
+    return;
+  }
+
+  el.innerHTML = listData[key].map((item) => {
+    const thumb = cfg.photo ? '<img class="thumb" src="' + cmsImage(item.photo) + '" alt="">' : '';
+    return '<div class="cms-item">' + thumb +
+      '<div class="info"><b>' + escapeHtml(cfg.primary(item)) + '</b>' +
+      '<span>' + escapeHtml(cfg.secondary(item) || '') + '</span></div>' +
+      '<div class="actions">' +
+      '<button class="btn-edit" onclick="editListItem(\'' + key + '\',\'' + item.id + '\')">Tahrirlash</button>' +
+      '<button class="btn-delete" onclick="deleteListItem(\'' + key + '\',\'' + item.id + '\')">O\'chirish</button>' +
+      '</div></div>';
+  }).join('');
+}
+
+function cancelListItem(key) {
+  const cfg = LIST_SECTIONS[key];
+  listEditing[key] = null;
+
+  cfg.fields.forEach((field) => {
+    const input = document.getElementById(key + '_' + field.name);
+    if (input) input.value = field.name === 'icon' ? 'fa-star' : '';
+  });
+
+  if (cfg.photo) {
+    document.getElementById(key + '_photo').value = '';
+    document.getElementById(key + 'Preview').innerHTML = '';
+  }
+
+  document.getElementById(key + 'FormTitle').textContent = cfg.formTitle;
+  document.getElementById(key + 'SaveBtn').textContent = "Qo'shish";
+  document.getElementById(key + 'CancelBtn').style.display = 'none';
+  setStatusEl(key + 'Status', '');
+}
+
+function editListItem(key, id) {
+  const cfg = LIST_SECTIONS[key];
+  const item = listData[key].find((entry) => entry.id === id);
+  if (!item) return;
+
+  listEditing[key] = id;
+
+  cfg.fields.forEach((field) => {
+    const input = document.getElementById(key + '_' + field.name);
+    if (input) input.value = item[field.name] || (field.name === 'icon' ? 'fa-star' : '');
+  });
+
+  if (cfg.photo) {
+    document.getElementById(key + '_photo').value = '';
+    document.getElementById(key + 'Preview').innerHTML = item.photo
+      ? '<img src="' + cmsImage(item.photo) + '" alt="">'
+      : '';
+  }
+
+  document.getElementById(key + 'FormTitle').textContent = cfg.editTitle;
+  document.getElementById(key + 'SaveBtn').textContent = 'Saqlash';
+  document.getElementById(key + 'CancelBtn').style.display = 'block';
+  setStatusEl(key + 'Status', '');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function saveListItem(key) {
+  const cfg = LIST_SECTIONS[key];
+  const fd = new FormData();
+  let valid = true;
+
+  cfg.fields.forEach((field) => {
+    const input = document.getElementById(key + '_' + field.name);
+    const value = input ? input.value.trim() : '';
+    if (field.required && !value) valid = false;
+    fd.append(field.name, value);
+  });
+
+  if (!valid) {
+    setStatusEl(key + 'Status', 'Majburiy maydonni to\'ldiring', true);
+    return;
+  }
+
+  if (cfg.photo) {
+    const fileInputEl = document.getElementById(key + '_photo');
+    if (fileInputEl.files[0]) fd.append('photo', fileInputEl.files[0]);
+  }
+
+  const wasEditing = Boolean(listEditing[key]);
+  const url = wasEditing
+    ? API_URL + '/api/content/' + key + '/' + listEditing[key]
+    : API_URL + '/api/content/' + key;
+
+  const btn = document.getElementById(key + 'SaveBtn');
+  btn.disabled = true;
+  setStatusEl(key + 'Status', 'Saqlanmoqda...');
+
+  try {
+    const res = await fetch(url, {
+      method: wasEditing ? 'PUT' : 'POST',
+      headers: { Authorization: 'Bearer ' + token },
+      body: fd,
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (res.status === 401) { logout(); return; }
+      setStatusEl(key + 'Status', data.error || 'Xatolik yuz berdi', true);
+      return;
+    }
+
+    cancelListItem(key);
+    setStatusEl(key + 'Status', wasEditing ? 'Yangilandi!' : "Qo'shildi!", false);
+    loadContent();
+  } catch (err) {
+    setStatusEl(key + 'Status', "Serverga ulanib bo'lmadi", true);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function deleteListItem(key, id) {
+  if (!confirm("Bu yozuvni o'chirmoqchimisiz?")) return;
+
+  try {
+    const res = await fetch(API_URL + '/api/content/' + key + '/' + id, {
+      method: 'DELETE',
+      headers: { Authorization: 'Bearer ' + token },
+    });
+    if (res.status === 401) { logout(); return; }
+    loadContent();
+  } catch (err) {
+    alert("O'chirishda xatolik yuz berdi");
+  }
+}
+
+/* ================= QABUL SAHIFALARI ================= */
+
+let admissionData = {};
+
+function renderAdmissionForm() {
+  admissionData = (contentCache.admission && typeof contentCache.admission === 'object') ? contentCache.admission : {};
+  fillAdmissionPage();
+}
+
+function storeAdmissionPage() {
+  const key = document.getElementById('admPage').value;
+  admissionData[key] = {
+    title: document.getElementById('admTitle').value.trim(),
+    subtitle: document.getElementById('admSubtitle').value.trim(),
+    blocks: collectAdmissionBlocks(),
+  };
+}
+
+function fillAdmissionPage() {
+  const key = document.getElementById('admPage').value;
+  const page = admissionData[key] || { title: '', subtitle: '', blocks: [] };
+
+  document.getElementById('admTitle').value = page.title || '';
+  document.getElementById('admSubtitle').value = page.subtitle || '';
+  renderAdmissionBlocks(page.blocks || []);
+}
+
+function switchAdmissionPage() {
+  storeAdmissionPage();
+  fillAdmissionPage();
+}
+
+function renderAdmissionBlocks(blocks) {
+  const box = document.getElementById('admBlocks');
+
+  box.innerHTML = blocks.map((block, index) =>
+    '<div class="adm-block" data-index="' + index + '" style="background:#f7f9fc;border:1px solid #e7eaf0;border-radius:8px;padding:8px;margin-bottom:8px;">' +
+    '<input type="text" class="adm-b-title" value="' + escapeAttr(block.title || '') + '" placeholder="Blok sarlavhasi" style="width:100%;margin-bottom:6px;padding:8px;border:1px solid #e2e7ee;border-radius:6px;font-family:inherit;">' +
+    '<textarea class="adm-b-text" placeholder="Matn" style="width:100%;min-height:70px;padding:8px;border:1px solid #e2e7ee;border-radius:6px;font-family:inherit;">' + escapeHtml(block.text || '') + '</textarea>' +
+    '<button class="btn-primary" style="background:#e63946;margin-top:6px;padding:6px;font-size:.8rem;" onclick="removeAdmissionBlock(' + index + ')">O\'chirish</button>' +
+    '</div>').join('');
+}
+
+function collectAdmissionBlocks() {
+  return Array.from(document.querySelectorAll('#admBlocks .adm-block')).map((el) => ({
+    title: el.querySelector('.adm-b-title').value.trim(),
+    text: el.querySelector('.adm-b-text').value.trim(),
+  })).filter((block) => block.title || block.text);
+}
+
+function addAdmissionBlock() {
+  const blocks = collectAdmissionBlocks();
+  blocks.push({ title: '', text: '' });
+  renderAdmissionBlocks(blocks);
+}
+
+function removeAdmissionBlock(index) {
+  const blocks = collectAdmissionBlocks().filter((block, i) => i !== index);
+  renderAdmissionBlocks(blocks);
+}
+
+async function saveAdmission() {
+  storeAdmissionPage();
+
+  const btn = document.getElementById('admSaveBtn');
+  btn.disabled = true;
+  setStatusEl('admStatus', 'Saqlanmoqda...');
+
+  try {
+    const res = await fetch(API_URL + '/api/content/admission', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+      body: JSON.stringify({ admission: admissionData }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (res.status === 401) { logout(); return; }
+      setStatusEl('admStatus', data.error || 'Xatolik yuz berdi', true);
+      return;
+    }
+
+    setStatusEl('admStatus', 'Saqlandi!', false);
+  } catch (err) {
+    setStatusEl('admStatus', "Serverga ulanib bo'lmadi", true);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+/* ================= SOZLAMALAR ================= */
+
+function renderSettingsForm() {
+  const settings = contentCache.settings || {};
+
+  const map = {
+    setPhone: 'phone',
+    setEmail: 'email',
+    setAddress: 'address',
+    setTelegram: 'telegram',
+    setInstagram: 'instagram',
+    setFacebook: 'facebook',
+    setYoutube: 'youtube',
+  };
+
+  Object.keys(map).forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.value = settings[map[id]] || '';
+  });
+}
+
+async function saveSettings() {
+  const payload = {
+    phone: document.getElementById('setPhone').value.trim(),
+    email: document.getElementById('setEmail').value.trim(),
+    address: document.getElementById('setAddress').value.trim(),
+    telegram: document.getElementById('setTelegram').value.trim(),
+    instagram: document.getElementById('setInstagram').value.trim(),
+    facebook: document.getElementById('setFacebook').value.trim(),
+    youtube: document.getElementById('setYoutube').value.trim(),
+  };
+
+  const btn = document.getElementById('setSaveBtn');
+  btn.disabled = true;
+  setStatusEl('setStatus', 'Saqlanmoqda...');
+
+  try {
+    const res = await fetch(API_URL + '/api/content/settings', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (res.status === 401) { logout(); return; }
+      setStatusEl('setStatus', data.error || 'Xatolik yuz berdi', true);
+      return;
+    }
+
+    setStatusEl('setStatus', 'Saqlandi!', false);
+    loadContent();
+  } catch (err) {
+    setStatusEl('setStatus', "Serverga ulanib bo'lmadi", true);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
 initGroupSelect();
+initListSections();
 
 document.getElementById('tPhoto').addEventListener('change', function () {
   showPreview('tPhotoPreview', this.files[0]);

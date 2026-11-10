@@ -227,98 +227,178 @@
 
   /* ---------------- Dars jadvali ---------------- */
 
-  function scheduleCellHtml(cell) {
-    if (!cell) return '<td class="sch-empty">—</td>';
+  var TIME_SLOTS = [
+    '8:00 – 8:45',
+    '8:55 – 9:40',
+    '9:50 – 10:35',
+    '10:45 – 11:30',
+    '11:40 – 12:25',
+    '13:10 – 13:55',
+    '14:05 – 14:50'
+  ];
 
-    var subject = String(cell.subject || '').trim();
-    var room = String(cell.room || '').trim();
+  function buildClassIndex(schedule) {
+    var index = {};
 
-    if (!subject) return '<td class="sch-empty">—</td>';
-    if (subject.toUpperCase() === 'TUSHLIK') return '<td class="sch-lunch">Tushlik</td>';
+    schedule.sections.forEach(function (section) {
+      (section.classes || []).forEach(function (name, classIndex) {
+        var days = (section.days || []).map(function (day) {
+          var lessons = (day.lessons || []).map(function (lesson) {
+            var cell = lesson.cells && lesson.cells[classIndex] ? lesson.cells[classIndex] : {};
+            return {
+              no: Number(lesson.no),
+              subject: String(cell.subject || '').trim(),
+              room: String(cell.room || '').trim()
+            };
+          }).filter(function (lesson) {
+            return lesson.subject;
+          });
 
-    return '<td><span class="sch-subj">' + esc(subject) + '</span>' +
-      (room ? '<span class="sch-room">' + esc(room) + '</span>' : '') +
-      '</td>';
+          lessons.sort(function (a, b) { return a.no - b.no; });
+          return { name: day.name, lessons: lessons };
+        });
+
+        index[name] = days;
+      });
+    });
+
+    return index;
+  }
+
+  function gradeOf(className) {
+    var match = /^(\d{1,2})/.exec(className);
+    return match ? match[1] : '';
   }
 
   function renderSchedule(schedule) {
-    var section = document.getElementById('schedule');
-    if (!section) return;
+    var host = document.getElementById('schedule');
+    if (!host) return;
     if (!schedule || !Array.isArray(schedule.sections) || !schedule.sections.length) return;
 
-    var container = section.querySelector('.container');
+    var container = host.querySelector('.container');
     if (!container) return;
 
-    var subtitle = section.querySelector('.section-title p');
+    var subtitle = host.querySelector('.section-title p');
     if (subtitle && schedule.title) subtitle.textContent = schedule.title;
 
-    var old = container.querySelector('.schedule-box');
+    var old = container.querySelector('.sch2');
     if (old) old.parentNode.removeChild(old);
 
-    var sectionIndex = 0;
-    var classIndex = 0;
+    var classIndex = buildClassIndex(schedule);
+    var classNames = Object.keys(classIndex);
+    if (!classNames.length) return;
+
+    var grades = [];
+    classNames.forEach(function (name) {
+      var grade = gradeOf(name);
+      if (grade && grades.indexOf(grade) === -1) grades.push(grade);
+    });
+    grades.sort(function (a, b) { return Number(a) - Number(b); });
+
+    var state = {
+      grade: grades[0],
+      className: classNames.filter(function (n) { return gradeOf(n) === grades[0]; })[0],
+      day: null
+    };
+
+    function classesOfGrade(grade) {
+      return classNames.filter(function (name) { return gradeOf(name) === grade; });
+    }
+
+    function daysOfClass(name) {
+      return classIndex[name] || [];
+    }
+
+    function pickDay(name) {
+      var days = daysOfClass(name);
+      if (!days.length) return null;
+      var exists = days.filter(function (day) { return day.name === state.day; })[0];
+      return exists ? exists.name : days[0].name;
+    }
 
     function draw() {
-      var currentSection = schedule.sections[sectionIndex];
-      var classes = currentSection.classes || [];
-      if (classIndex >= classes.length) classIndex = 0;
-
-      var days = currentSection.days || [];
-      var className = classes[classIndex] || '';
-
-      var tabsHtml = schedule.sections.map(function (sec, index) {
-        return '<button class="sch-tab' + (index === sectionIndex ? ' active' : '') + '" data-section="' + index + '">' +
-          esc(sec.title) + '</button>';
-      }).join('');
-
-      var chipsHtml = classes.map(function (name, index) {
-        return '<button class="sch-chip' + (index === classIndex ? ' active' : '') + '" data-class="' + index + '">' +
-          esc(name) + '</button>';
-      }).join('');
-
-      var tableHtml = '<div class="sch-scroll"><table class="sch-table"><thead><tr><th class="sch-no">№</th>';
-      days.forEach(function (day) {
-        tableHtml += '<th>' + esc(day.name) + '</th>';
-      });
-      tableHtml += '</tr></thead><tbody>';
-
-      for (var lessonNo = 1; lessonNo <= 7; lessonNo += 1) {
-        tableHtml += '<tr><td class="sch-no">' + lessonNo + '</td>';
-        days.forEach(function (day) {
-          var lesson = (day.lessons || []).filter(function (item) {
-            return Number(item.no) === lessonNo;
-          })[0];
-          var cell = lesson && lesson.cells ? lesson.cells[classIndex] : null;
-          tableHtml += scheduleCellHtml(cell);
-        });
-        tableHtml += '</tr>';
-      }
-      tableHtml += '</tbody></table></div>';
-
-      var box = container.querySelector('.schedule-box');
+      var box = container.querySelector('.sch2');
       if (!box) {
         box = document.createElement('div');
-        box.className = 'schedule-box';
+        box.className = 'sch2';
         container.appendChild(box);
       }
 
-      box.innerHTML =
-        '<div class="sch-tabs">' + tabsHtml + '</div>' +
-        '<div class="sch-classes">' + chipsHtml + '</div>' +
-        '<div class="sch-caption">' + esc(className) + ' sinf — haftalik jadval</div>' +
-        tableHtml;
+      var days = daysOfClass(state.className);
+      state.day = pickDay(state.className);
 
-      box.querySelectorAll('.sch-tab').forEach(function (btn) {
+      var dayData = days.filter(function (day) { return day.name === state.day; })[0];
+      var lessons = dayData ? dayData.lessons : [];
+
+      var gradesHtml = grades.map(function (grade) {
+        return '<button class="sch2-btn' + (grade === state.grade ? ' active' : '') + '" data-grade="' + grade + '">' +
+          esc(grade) + '-sinf</button>';
+      }).join('');
+
+      var classesHtml = classesOfGrade(state.grade).map(function (name) {
+        return '<button class="sch2-btn' + (name === state.className ? ' active' : '') + '" data-class="' + esc(name) + '">' +
+          esc(name) + '</button>';
+      }).join('');
+
+      var daysHtml = days.map(function (day) {
+        return '<button class="sch2-btn' + (day.name === state.day ? ' active' : '') + '" data-day="' + esc(day.name) + '">' +
+          esc(day.name) + '</button>';
+      }).join('');
+
+      var realLessons = lessons.filter(function (lesson) {
+        return lesson.subject.toUpperCase() !== 'TUSHLIK';
+      });
+
+      var rowsHtml = lessons.map(function (lesson) {
+        var time = TIME_SLOTS[lesson.no - 1] || '';
+
+        if (lesson.subject.toUpperCase() === 'TUSHLIK') {
+          return '<tr class="sch2-lunch"><td class="num">' + lesson.no + '</td>' +
+            '<td class="time">' + time + '</td>' +
+            '<td colspan="2">Tushlik</td></tr>';
+        }
+
+        return '<tr><td class="num">' + lesson.no + '</td>' +
+          '<td class="time">' + time + '</td>' +
+          '<td class="subj">' + esc(lesson.subject) + '</td>' +
+          '<td class="room">' + (lesson.room ? '<span>' + esc(lesson.room) + '</span>' : '—') + '</td></tr>';
+      }).join('');
+
+      box.innerHTML =
+        '<div class="sch2-grades">' + gradesHtml + '</div>' +
+        '<div class="sch2-classes">' + classesHtml + '</div>' +
+        '<div class="sch2-days">' + daysHtml + '</div>' +
+        '<div class="sch2-head">' +
+        '<span class="sch2-pill">' + esc(state.className) + ' sinf</span>' +
+        '<span class="sch2-pill gold">' + esc(state.day || '') + '</span>' +
+        '<span class="sch2-count">' + realLessons.length + ' dars</span>' +
+        '</div>' +
+        '<table class="sch2-table"><thead><tr>' +
+        '<th>#</th><th>Vaqt</th><th>Fan</th><th>Xona</th>' +
+        '</tr></thead><tbody>' +
+        (rowsHtml || '<tr><td colspan="4" style="text-align:center;color:#8a93a3;">Bu kunda dars yo\'q</td></tr>') +
+        '</tbody></table>';
+
+      box.querySelectorAll('[data-grade]').forEach(function (btn) {
         btn.addEventListener('click', function () {
-          sectionIndex = Number(btn.getAttribute('data-section'));
-          classIndex = 0;
+          state.grade = btn.getAttribute('data-grade');
+          state.className = classesOfGrade(state.grade)[0];
+          state.day = null;
           draw();
         });
       });
 
-      box.querySelectorAll('.sch-chip').forEach(function (btn) {
+      box.querySelectorAll('[data-class]').forEach(function (btn) {
         btn.addEventListener('click', function () {
-          classIndex = Number(btn.getAttribute('data-class'));
+          state.className = btn.getAttribute('data-class');
+          state.day = null;
+          draw();
+        });
+      });
+
+      box.querySelectorAll('[data-day]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          state.day = btn.getAttribute('data-day');
           draw();
         });
       });
@@ -357,6 +437,21 @@
         }
         if (data.about) {
           renderAbout(data.about);
+        }
+        if (data.settings) {
+          renderSettings(data.settings);
+        }
+        if (Array.isArray(data.staff) && data.staff.length) {
+          renderStaff(data.staff);
+        }
+        if (Array.isArray(data.faq) && data.faq.length) {
+          renderFaq(data.faq);
+        }
+        if (Array.isArray(data.features) && data.features.length) {
+          renderFeatures(data.features);
+        }
+        if (data.admission) {
+          renderAdmission(data.admission);
         }
         if (data.schedule) {
           renderSchedule(data.schedule);
