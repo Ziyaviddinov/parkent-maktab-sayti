@@ -137,7 +137,206 @@
     grid.innerHTML = list.map(leadershipCard).join('');
   }
 
+  /* ---------------- Maktab haqida ---------------- */
+
+  var STAT_ICONS = ['fa-graduation-cap', 'fa-person-chalkboard', 'fa-book', 'fa-building-columns'];
+
+  function aboutParagraphs(text) {
+    return String(text || '')
+      .split(/\n{2,}/)
+      .map(function (part) { return part.trim(); })
+      .filter(Boolean);
+  }
+
+  function renderAbout(about) {
+    if (!about) return;
+
+    var section = document.getElementById('about');
+    var isHomeAbout = section && section.classList.contains('about-section') && section.querySelector('.about-content');
+
+    if (isHomeAbout) {
+      var badge = section.querySelector('.section-badge');
+      if (badge && about.badge) badge.textContent = about.badge;
+
+      var title = section.querySelector('h2');
+      if (title && about.title) title.textContent = about.title;
+
+      var content = section.querySelector('.about-content');
+      var underline = section.querySelector('.underline');
+
+      if (content && underline) {
+        Array.prototype.slice.call(content.children).forEach(function (el) {
+          if (el.tagName === 'P') el.parentNode.removeChild(el);
+        });
+
+        var anchor = underline;
+        aboutParagraphs(about.text).forEach(function (text) {
+          var p = document.createElement('p');
+          p.textContent = text;
+          anchor.parentNode.insertBefore(p, anchor.nextSibling);
+          anchor = p;
+        });
+      }
+
+      var list = section.querySelector('.about-list');
+      if (list && Array.isArray(about.list) && about.list.length) {
+        list.innerHTML = about.list.map(function (item) {
+          return '<li><i class="fa-solid fa-check"></i> ' + esc(item) + '</li>';
+        }).join('');
+      }
+
+      var image = section.querySelector('.about-image img');
+      if (image && about.image) image.src = imageSrc(about.image);
+    }
+
+    // Bosh sahifadagi statistika bloki
+    var statsGrid = document.querySelector('.stats-section .stats-grid');
+    if (statsGrid && Array.isArray(about.stats) && about.stats.length) {
+      var statsTitle = document.querySelector('.stats-section .stats-title');
+      if (statsTitle && about.statsTitle) statsTitle.textContent = about.statsTitle;
+
+      statsGrid.innerHTML = about.stats.map(function (stat, index) {
+        return '<div class="stat-card">' +
+          '<div class="stat-icon"><i class="fa-solid ' + (STAT_ICONS[index] || 'fa-chart-simple') + '"></i></div>' +
+          '<h3>' + esc(stat.value) + '</h3>' +
+          '<p>' + esc(stat.label) + '</p>' +
+          '</div>';
+      }).join('');
+    }
+
+    // "Biz haqimizda" sahifasidagi matn va rasm
+    var pageLeft = document.querySelector('.about-section#about .about-left');
+    if (pageLeft) {
+      var firstParagraph = pageLeft.querySelector('p');
+      if (firstParagraph && about.text) {
+        var fragment = document.createDocumentFragment();
+        aboutParagraphs(about.text).forEach(function (text) {
+          var p = document.createElement('p');
+          p.textContent = text;
+          fragment.appendChild(p);
+        });
+        firstParagraph.parentNode.replaceChild(fragment, firstParagraph);
+      }
+
+      var pageImage = document.querySelector('.about-section#about .about-right img');
+      if (pageImage && typeof about.image === 'string' && about.image.charAt(0) === '/') {
+        pageImage.src = imageSrc(about.image);
+      }
+    }
+  }
+
+  /* ---------------- Dars jadvali ---------------- */
+
+  function scheduleCellHtml(cell) {
+    if (!cell) return '<td class="sch-empty">—</td>';
+
+    var subject = String(cell.subject || '').trim();
+    var room = String(cell.room || '').trim();
+
+    if (!subject) return '<td class="sch-empty">—</td>';
+    if (subject.toUpperCase() === 'TUSHLIK') return '<td class="sch-lunch">Tushlik</td>';
+
+    return '<td><span class="sch-subj">' + esc(subject) + '</span>' +
+      (room ? '<span class="sch-room">' + esc(room) + '</span>' : '') +
+      '</td>';
+  }
+
+  function renderSchedule(schedule) {
+    var section = document.getElementById('schedule');
+    if (!section) return;
+    if (!schedule || !Array.isArray(schedule.sections) || !schedule.sections.length) return;
+
+    var container = section.querySelector('.container');
+    if (!container) return;
+
+    var subtitle = section.querySelector('.section-title p');
+    if (subtitle && schedule.title) subtitle.textContent = schedule.title;
+
+    var old = container.querySelector('.schedule-box');
+    if (old) old.parentNode.removeChild(old);
+
+    var sectionIndex = 0;
+    var classIndex = 0;
+
+    function draw() {
+      var currentSection = schedule.sections[sectionIndex];
+      var classes = currentSection.classes || [];
+      if (classIndex >= classes.length) classIndex = 0;
+
+      var days = currentSection.days || [];
+      var className = classes[classIndex] || '';
+
+      var tabsHtml = schedule.sections.map(function (sec, index) {
+        return '<button class="sch-tab' + (index === sectionIndex ? ' active' : '') + '" data-section="' + index + '">' +
+          esc(sec.title) + '</button>';
+      }).join('');
+
+      var chipsHtml = classes.map(function (name, index) {
+        return '<button class="sch-chip' + (index === classIndex ? ' active' : '') + '" data-class="' + index + '">' +
+          esc(name) + '</button>';
+      }).join('');
+
+      var tableHtml = '<div class="sch-scroll"><table class="sch-table"><thead><tr><th class="sch-no">№</th>';
+      days.forEach(function (day) {
+        tableHtml += '<th>' + esc(day.name) + '</th>';
+      });
+      tableHtml += '</tr></thead><tbody>';
+
+      for (var lessonNo = 1; lessonNo <= 7; lessonNo += 1) {
+        tableHtml += '<tr><td class="sch-no">' + lessonNo + '</td>';
+        days.forEach(function (day) {
+          var lesson = (day.lessons || []).filter(function (item) {
+            return Number(item.no) === lessonNo;
+          })[0];
+          var cell = lesson && lesson.cells ? lesson.cells[classIndex] : null;
+          tableHtml += scheduleCellHtml(cell);
+        });
+        tableHtml += '</tr>';
+      }
+      tableHtml += '</tbody></table></div>';
+
+      var box = container.querySelector('.schedule-box');
+      if (!box) {
+        box = document.createElement('div');
+        box.className = 'schedule-box';
+        container.appendChild(box);
+      }
+
+      box.innerHTML =
+        '<div class="sch-tabs">' + tabsHtml + '</div>' +
+        '<div class="sch-classes">' + chipsHtml + '</div>' +
+        '<div class="sch-caption">' + esc(className) + ' sinf — haftalik jadval</div>' +
+        tableHtml;
+
+      box.querySelectorAll('.sch-tab').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          sectionIndex = Number(btn.getAttribute('data-section'));
+          classIndex = 0;
+          draw();
+        });
+      });
+
+      box.querySelectorAll('.sch-chip').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          classIndex = Number(btn.getAttribute('data-class'));
+          draw();
+        });
+      });
+    }
+
+    draw();
+  }
+
   /* ---------------- Yuklash ---------------- */
+
+  function loadStaticSchedule() {
+    if (!document.getElementById('schedule')) return;
+
+    fetch('schedule.json', { cache: 'no-store' })
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (data) { if (data) renderSchedule(data); })
+      .catch(function () { /* jadval bo'lmasa hech narsa qilmaymiz */ });
+  }
 
   function load() {
     if (!window.fetch) return;
@@ -156,9 +355,18 @@
         if (leadership.length) {
           renderLeadership(leadership);
         }
+        if (data.about) {
+          renderAbout(data.about);
+        }
+        if (data.schedule) {
+          renderSchedule(data.schedule);
+        } else {
+          loadStaticSchedule();
+        }
       })
       .catch(function (err) {
         console.log('CMS: kontentni yuklab bo\'lmadi —', err.message);
+        loadStaticSchedule();
       });
   }
 

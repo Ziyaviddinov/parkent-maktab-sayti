@@ -274,6 +274,27 @@
     border: 2px solid #e7eaf0;
     display: block;
   }
+  .stats-form-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .stat-box { background: #f7f9fc; border: 1px solid #e7eaf0; border-radius: 8px; padding: 8px; }
+  .stat-box input { margin-bottom: 6px; }
+  .stat-box input:last-child { margin-bottom: 0; }
+  @media (max-width: 760px) { .stats-form-grid { grid-template-columns: 1fr 1fr; } }
+
+  .sch-admin-wrap { overflow-x: auto; margin-bottom: 12px; }
+  .sch-admin-table { border-collapse: collapse; min-width: 760px; width: 100%; }
+  .sch-admin-table th { background: #0b2545; color: #fff; padding: 8px 6px; font-size: 0.8rem; }
+  .sch-admin-table td { border: 1px solid #eef1f5; padding: 4px; vertical-align: top; }
+  .sch-admin-table input {
+    width: 100%;
+    border: 1px solid #e2e7ee;
+    border-radius: 6px;
+    padding: 5px 6px;
+    font-size: 0.78rem;
+    margin-bottom: 3px;
+    font-family: inherit;
+  }
+  .sch-admin-table input:last-child { margin-bottom: 0; }
+  .sch-admin-table .no-cell { background: #f7f9fc; font-weight: 700; text-align: center; width: 34px; font-size: 0.8rem; }
 </style>
 </head>
 <body>
@@ -304,6 +325,8 @@
       <button class="tab-btn active" data-tab="news" onclick="switchTab('news')">📰 Yangiliklar</button>
       <button class="tab-btn" data-tab="teachers" onclick="switchTab('teachers')">👩‍🏫 O'qituvchilar</button>
       <button class="tab-btn" data-tab="leadership" onclick="switchTab('leadership')">🏛️ Rahbariyat</button>
+      <button class="tab-btn" data-tab="about" onclick="switchTab('about')">🏫 Maktab haqida</button>
+      <button class="tab-btn" data-tab="schedule" onclick="switchTab('schedule')">📅 Dars jadvali</button>
     </div>
   </div>
 
@@ -425,8 +448,108 @@
     <h3 class="pane-title">Rahbariyat ro'yxati</h3>
     <div class="cms-list" id="leadershipList"></div>
   </div>
+
+  <!-- ================= MAKTAB HAQIDA ================= -->
+  <div class="container pane" id="paneAbout">
+    <div class="card-form">
+      <h3>Maktab haqida bo'limi</h3>
+      <p class="empty-note" style="margin-bottom:14px;">Bu yerda kiritilgan matn bosh sahifadagi "Maktab haqida" blokida va "Biz haqimizda" sahifasida ko'rinadi.</p>
+
+      <div class="form-grid">
+        <div class="field">
+          <label>Kichik belgi (badge)</label>
+          <input type="text" id="aBadge" placeholder="Maktab haqida">
+        </div>
+        <div class="field">
+          <label>Sarlavha</label>
+          <input type="text" id="aTitle" placeholder="Bizning maktab - sizning kelajagingiz!">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Asosiy matn <span class="hint">(har bir paragrafni bo'sh qatordan keyin yozing)</span></label>
+        <textarea id="aText" style="min-height: 150px;"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Belgilar ro'yxati <span class="hint">(har biri yangi qatorda)</span></label>
+        <textarea id="aList" style="min-height: 100px;"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Statistika sarlavhasi</label>
+        <input type="text" id="aStatsTitle" placeholder="MAKTAB STATISTIKASI">
+      </div>
+
+      <div class="field">
+        <label>Statistika ko'rsatkichlari</label>
+        <div class="stats-form-grid">
+          <div class="stat-box">
+            <input type="text" id="sVal0" placeholder="500+">
+            <input type="text" id="sLbl0" placeholder="O'quvchilar">
+          </div>
+          <div class="stat-box">
+            <input type="text" id="sVal1" placeholder="50+">
+            <input type="text" id="sLbl1" placeholder="O'qituvchilar">
+          </div>
+          <div class="stat-box">
+            <input type="text" id="sVal2" placeholder="15+">
+            <input type="text" id="sLbl2" placeholder="To'garaklar">
+          </div>
+          <div class="stat-box">
+            <input type="text" id="sVal3" placeholder="100%">
+            <input type="text" id="sLbl3" placeholder="OTM ga kirish ko'rsatkichi">
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Rasm <span class="hint">(5MB gacha, ixtiyoriy)</span></label>
+        <input type="file" id="aImage" accept="image/*">
+        <div class="photo-preview" id="aPreview"></div>
+      </div>
+
+      <button class="btn-primary" onclick="saveAbout()" id="aSaveBtn">Saqlash</button>
+      <div class="status-msg" id="aStatus"></div>
+    </div>
+  </div>
+
+  <!-- ================= DARS JADVALI ================= -->
+  <div class="container pane" id="paneSchedule">
+    <div class="card-form">
+      <h3>Dars jadvali</h3>
+      <p class="empty-note" style="margin-bottom:14px;">Jadvalni .xls / .xlsx fayldan yuklashingiz yoki quyidagi kataklarda qo'lda tahrirlashingiz mumkin.</p>
+
+      <div class="field">
+        <label>Excel fayldan yuklash <span class="hint">(.xls yoki .xlsx)</span></label>
+        <input type="file" id="sFile" accept=".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+      </div>
+
+      <div class="field">
+        <label>Jadval sarlavhasi <span class="hint">(saytda ko'rinadi)</span></label>
+        <input type="text" id="sTitle" placeholder="II chorak 2025-2026 o'quv yili">
+      </div>
+
+      <div class="form-grid">
+        <div class="field">
+          <label>Bo'lim</label>
+          <select id="sSection" onchange="onScheduleSectionChange()"></select>
+        </div>
+        <div class="field">
+          <label>Sinf</label>
+          <select id="sClass" onchange="drawScheduleGrid()"></select>
+        </div>
+      </div>
+
+      <div class="sch-admin-wrap" id="sGrid"></div>
+
+      <button class="btn-primary" onclick="saveSchedule()" id="sSaveBtn">Jadvalni saqlash</button>
+      <div class="status-msg" id="sStatus"></div>
+    </div>
+  </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 // Backend server manzili.
 // Mahalliy kompyuterda ochilganda lokal serverga, saytda esa Render'dagi serverga ulanadi.
@@ -801,6 +924,7 @@ const EMPTY_AVATAR = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
 );
 
 let contentCache = { teachers: [], leadership: [] };
+let scheduleData = null;
 let editingTeacherId = null;
 let editingLeaderId = null;
 
@@ -843,8 +967,13 @@ async function loadContent() {
     const data = await res.json();
     contentCache.teachers = Array.isArray(data.teachers) ? data.teachers : [];
     contentCache.leadership = Array.isArray(data.leadership) ? data.leadership : [];
+    contentCache.about = data.about || null;
+    scheduleData = data.schedule || null;
     renderTeachersList();
     renderLeadershipList();
+    renderAboutForm();
+    renderScheduleAdmin();
+    if (!scheduleData) loadStaticScheduleForAdmin();
   } catch (err) {
     console.log('Kontentni yuklab bo\'lmadi:', err.message);
   }
@@ -1195,6 +1324,297 @@ async function importTeachers() {
   loadContent();
 }
 
+/* ================= MAKTAB HAQIDA ================= */
+
+function renderAboutForm() {
+  const about = contentCache.about;
+  if (!about) return;
+
+  document.getElementById('aBadge').value = about.badge || '';
+  document.getElementById('aTitle').value = about.title || '';
+  document.getElementById('aText').value = about.text || '';
+  document.getElementById('aList').value = (about.list || []).join('\n');
+  document.getElementById('aStatsTitle').value = about.statsTitle || '';
+
+  (about.stats || []).slice(0, 4).forEach((stat, index) => {
+    const valueInput = document.getElementById('sVal' + index);
+    const labelInput = document.getElementById('sLbl' + index);
+    if (valueInput) valueInput.value = stat.value || '';
+    if (labelInput) labelInput.value = stat.label || '';
+  });
+
+  const preview = document.getElementById('aPreview');
+  preview.innerHTML = about.image ? '<img src="' + cmsImage(about.image) + '" alt="">' : '';
+}
+
+async function saveAbout() {
+  const stats = [];
+  for (let i = 0; i < 4; i += 1) {
+    stats.push({
+      value: document.getElementById('sVal' + i).value.trim(),
+      label: document.getElementById('sLbl' + i).value.trim(),
+    });
+  }
+
+  const fd = new FormData();
+  fd.append('badge', document.getElementById('aBadge').value.trim());
+  fd.append('title', document.getElementById('aTitle').value.trim());
+  fd.append('text', document.getElementById('aText').value.trim());
+  fd.append('list', document.getElementById('aList').value);
+  fd.append('statsTitle', document.getElementById('aStatsTitle').value.trim());
+  fd.append('stats', JSON.stringify(stats));
+
+  const image = document.getElementById('aImage').files[0];
+  if (image) fd.append('image', image);
+
+  const btn = document.getElementById('aSaveBtn');
+  btn.disabled = true;
+  setStatusEl('aStatus', 'Saqlanmoqda...');
+
+  try {
+    const res = await fetch(`${API_URL}/api/content/about`, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token}` },
+      body: fd,
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (res.status === 401) { logout(); return; }
+      setStatusEl('aStatus', data.error || 'Xatolik yuz berdi', true);
+      return;
+    }
+
+    document.getElementById('aImage').value = '';
+    setStatusEl('aStatus', 'Saqlandi! Saytni yangilab ko\'ring.', false);
+    loadContent();
+  } catch (err) {
+    setStatusEl('aStatus', "Serverga ulanib bo'lmadi", true);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+/* ================= DARS JADVALI ================= */
+
+function escapeAttr(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function currentScheduleSection() {
+  if (!scheduleData || !Array.isArray(scheduleData.sections)) return null;
+  return scheduleData.sections[Number(document.getElementById('sSection').value) || 0] || null;
+}
+
+function currentScheduleClassIndex() {
+  return Number(document.getElementById('sClass').value) || 0;
+}
+
+function renderScheduleAdmin() {
+  const sectionSelect = document.getElementById('sSection');
+  const classSelect = document.getElementById('sClass');
+
+  if (!scheduleData || !Array.isArray(scheduleData.sections) || !scheduleData.sections.length) {
+    sectionSelect.innerHTML = '';
+    classSelect.innerHTML = '';
+    document.getElementById('sGrid').innerHTML =
+      '<p class="empty-note">Jadval hali yuklanmagan. Yuqoridan .xls fayl yuklang.</p>';
+    return;
+  }
+
+  sectionSelect.innerHTML = scheduleData.sections.map((sec, index) =>
+    `<option value="${index}">${escapeHtml(sec.title || "Bo'lim " + (index + 1))}</option>`).join('');
+
+  document.getElementById('sTitle').value = scheduleData.title || '';
+
+  fillScheduleClasses();
+}
+
+function fillScheduleClasses() {
+  const section = currentScheduleSection();
+  const classSelect = document.getElementById('sClass');
+  const classes = section && Array.isArray(section.classes) ? section.classes : [];
+
+  classSelect.innerHTML = classes.map((name, index) =>
+    `<option value="${index}">${escapeHtml(name)}</option>`).join('');
+
+  drawScheduleGrid();
+}
+
+function onScheduleSectionChange() {
+  fillScheduleClasses();
+}
+
+function drawScheduleGrid() {
+  const grid = document.getElementById('sGrid');
+  const section = currentScheduleSection();
+
+  if (!section) {
+    grid.innerHTML = '';
+    return;
+  }
+
+  const days = Array.isArray(section.days) ? section.days : [];
+  const classIndex = currentScheduleClassIndex();
+
+  let html = '<table class="sch-admin-table"><thead><tr><th>№</th>';
+  days.forEach((day) => { html += `<th>${escapeHtml(day.name)}</th>`; });
+  html += '</tr></thead><tbody>';
+
+  for (let lessonNo = 1; lessonNo <= 7; lessonNo += 1) {
+    html += `<tr><td class="no-cell">${lessonNo}</td>`;
+    days.forEach((day, dayIndex) => {
+      const lesson = (day.lessons || []).find((item) => Number(item.no) === lessonNo);
+      const cell = lesson && lesson.cells ? (lesson.cells[classIndex] || {}) : {};
+
+      html += '<td>' +
+        `<input type="text" value="${escapeAttr(cell.subject || '')}" placeholder="Fan" data-day="${dayIndex}" data-lesson="${lessonNo}" data-field="subject">` +
+        `<input type="text" value="${escapeAttr(cell.room || '')}" placeholder="Xona" data-day="${dayIndex}" data-lesson="${lessonNo}" data-field="room">` +
+        '</td>';
+    });
+    html += '</tr>';
+  }
+
+  html += '</tbody></table>';
+  grid.innerHTML = html;
+}
+
+async function saveSchedule() {
+  if (!scheduleData || !scheduleData.sections) {
+    setStatusEl('sStatus', 'Avval jadvalni yuklang', true);
+    return;
+  }
+
+  const btn = document.getElementById('sSaveBtn');
+  btn.disabled = true;
+  setStatusEl('sStatus', 'Saqlanmoqda...');
+
+  try {
+    const res = await fetch(`${API_URL}/api/content/schedule`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ schedule: scheduleData }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (res.status === 401) { logout(); return; }
+      setStatusEl('sStatus', data.error || 'Xatolik yuz berdi', true);
+      return;
+    }
+
+    setStatusEl('sStatus', "Saqlandi! Saytni yangilab tekshiring.", false);
+  } catch (err) {
+    setStatusEl('sStatus', "Serverga ulanib bo'lmadi", true);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function parseScheduleWorkbook(workbook) {
+  const sections = [];
+
+  workbook.SheetNames.forEach((sheetName) => {
+    const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
+      header: 1,
+      raw: false,
+      defval: '',
+      blankrows: true,
+    });
+
+    const classes = [];
+    const days = [];
+    let current = null;
+
+    rows.forEach((row) => {
+      const cells = (row || []).map((value) => String(value == null ? '' : value).trim());
+
+      const dayName = (cells[0] || '').trim();
+      if (dayName && !/^d\s*a\s*r\s*s/i.test(dayName) && !/^maktab/i.test(dayName)) {
+        current = { name: dayName.charAt(0).toUpperCase() + dayName.slice(1), lessons: [] };
+        days.push(current);
+      }
+
+      if ((cells[1] || '').trim() === 'T.r') {
+        if (!classes.length) {
+          for (let c = 2; c < cells.length; c += 2) {
+            if (cells[c]) classes.push(cells[c]);
+          }
+        }
+        return;
+      }
+
+      const lessonNo = parseFloat(cells[1]);
+      if (!isNaN(lessonNo) && current) {
+        const list = [];
+        for (let i = 0; i < classes.length; i += 1) {
+          list.push({
+            subject: cells[2 + i * 2] || '',
+            room: cells[3 + i * 2] || '',
+          });
+        }
+        current.lessons.push({ no: Math.trunc(lessonNo), cells: list });
+      }
+    });
+
+    sections.push({
+      title: sheetName + ' sinflar',
+      classes,
+      days: days.filter((day) => day.lessons.length),
+    });
+  });
+
+  return { title: 'Dars jadvali', sections };
+}
+
+async function importScheduleFile(file) {
+  if (typeof XLSX === 'undefined') {
+    setStatusEl('sStatus', "Excel kutubxonasi yuklanmadi — internetni tekshiring", true);
+    return;
+  }
+
+  try {
+    const buffer = await file.arrayBuffer();
+    const workbook = XLSX.read(buffer, { type: 'array' });
+    const parsed = parseScheduleWorkbook(workbook);
+
+    if (!parsed.sections.some((section) => section.days.length)) {
+      throw new Error("jadval topilmadi");
+    }
+
+    scheduleData = parsed;
+    scheduleData.title = file.name
+      .replace(/\.(xls|xlsx)$/i, '')
+      .replace(/[_-]+/g, ' ')
+      .trim();
+    renderScheduleAdmin();
+    setStatusEl('sStatus', "Fayl o'qildi. Endi \"Jadvalni saqlash\" tugmasini bosing.", false);
+  } catch (err) {
+    setStatusEl('sStatus', "Faylni o'qishda xatolik: " + err.message, true);
+  }
+}
+
+async function loadStaticScheduleForAdmin() {
+  try {
+    const res = await fetch('schedule.json', { cache: 'no-store' });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data && data.sections) {
+      scheduleData = data;
+      renderScheduleAdmin();
+    }
+  } catch (err) {
+    // jadval bo'lmasa muhim emas
+  }
+}
+
 initGroupSelect();
 
 document.getElementById('tPhoto').addEventListener('change', function () {
@@ -1202,6 +1622,45 @@ document.getElementById('tPhoto').addEventListener('change', function () {
 });
 document.getElementById('lPhoto').addEventListener('change', function () {
   showPreview('lPhotoPreview', this.files[0]);
+});
+document.getElementById('aImage').addEventListener('change', function () {
+  showPreview('aPreview', this.files[0]);
+});
+
+document.getElementById('sFile').addEventListener('change', function () {
+  if (this.files && this.files[0]) importScheduleFile(this.files[0]);
+  this.value = '';
+});
+
+document.getElementById('sTitle').addEventListener('input', function () {
+  if (scheduleData) scheduleData.title = this.value;
+});
+
+document.getElementById('sGrid').addEventListener('input', function (event) {
+  const input = event.target;
+  if (!input || input.tagName !== 'INPUT' || input.dataset.day === undefined) return;
+
+  const section = currentScheduleSection();
+  if (!section) return;
+
+  const dayIndex = Number(input.dataset.day);
+  const lessonNo = Number(input.dataset.lesson);
+  const day = section.days[dayIndex];
+  if (!day) return;
+
+  if (!Array.isArray(day.lessons)) day.lessons = [];
+
+  let lesson = day.lessons.find((item) => Number(item.no) === lessonNo);
+  if (!lesson) {
+    lesson = { no: lessonNo, cells: [] };
+    day.lessons.push(lesson);
+    day.lessons.sort((a, b) => a.no - b.no);
+  }
+
+  const classIndex = currentScheduleClassIndex();
+  while (lesson.cells.length <= classIndex) lesson.cells.push({ subject: '', room: '' });
+
+  lesson.cells[classIndex][input.dataset.field] = input.value;
 });
 
 renderPreviews();

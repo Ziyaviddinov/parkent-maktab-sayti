@@ -19,7 +19,27 @@ const DEFAULT_CONTENT = {
   },
   teachers: [],
   leadership: [],
-  pages: {}
+  pages: {},
+  schedule: null,
+  about: {
+    badge: 'Maktab haqida',
+    title: 'Bizning maktab - sizning kelajagingiz!',
+    text: "Parkent Ixtisoslashtirilgan maktabi 2022-yil sentabr oyida tashkil topgan bo'lib, O'zbekiston Respublikasi Ixtisoslashtirilgan ta'lim muassasalari agentligi tasarrufida faoliyat yuritadi. Hozirgi kunda maktabimizda 460 nafardan ortiq o'quvchi tahsil olmoqda.\n\nO'quv jarayoni aniq va tabiiy fanlarga ixtisoslashtirilgan holda tashkil etilgan bo'lib, bu o'quvchilarning matematika, fizika, kimyo, biologiya kabi fanlar bo'yicha chuqur bilim va amaliy ko'nikmalarga ega bo'lishini ta'minlaydi. Maqsadimiz — mustaqil fikrlay oladigan, ilmiy-tadqiqot faoliyatiga qiziquvchan yoshlarni voyaga yetkazishdir.",
+    list: [
+      "Aniq va tabiiy fanlarga ixtisoslashgan ta'lim",
+      "460 nafardan ortiq o'quvchi",
+      'Davlat agentligi tasarrufidagi maktab',
+      "Amaliy va tahliliy tafakkurga yo'naltirilgan dastur"
+    ],
+    image: 'maktab.jpg',
+    statsTitle: 'MAKTAB STATISTIKASI',
+    stats: [
+      { value: '500+', label: "O'quvchilar" },
+      { value: '50+', label: "O'qituvchilar" },
+      { value: '15+', label: "To'garaklar" },
+      { value: '100%', label: "OTM ga kirish ko'rsatkichi" }
+    ]
+  }
 };
 
 let writeQueue = Promise.resolve();
@@ -38,7 +58,9 @@ function readContent() {
       settings: { ...clone(DEFAULT_CONTENT.settings), ...(parsed.settings || {}) },
       teachers: Array.isArray(parsed.teachers) ? parsed.teachers : [],
       leadership: Array.isArray(parsed.leadership) ? parsed.leadership : [],
-      pages: parsed.pages && typeof parsed.pages === 'object' ? parsed.pages : {}
+      pages: parsed.pages && typeof parsed.pages === 'object' ? parsed.pages : {},
+      about: { ...clone(DEFAULT_CONTENT.about), ...(parsed.about || {}) },
+      schedule: parsed.schedule && typeof parsed.schedule === 'object' ? parsed.schedule : null
     };
   } catch (err) {
     return clone(DEFAULT_CONTENT);

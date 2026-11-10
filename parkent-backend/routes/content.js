@@ -80,6 +80,74 @@ router.put('/settings', authMiddleware, (req, res) => {
     });
 });
 
+// PUT /api/content/about - "Maktab haqida" bo'limi (faqat admin)
+router.put('/about', authMiddleware, upload.single('image'), (req, res) => {
+  const content = readContent();
+  const about = { ...content.about };
+
+  ['badge', 'title', 'text', 'statsTitle'].forEach((key) => {
+    if (typeof req.body[key] === 'string') about[key] = req.body[key].trim();
+  });
+
+  if (typeof req.body.list === 'string') {
+    about.list = req.body.list
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean);
+  }
+
+  if (typeof req.body.stats === 'string') {
+    try {
+      const parsedStats = JSON.parse(req.body.stats);
+      if (Array.isArray(parsedStats)) {
+        about.stats = parsedStats
+          .filter((item) => item && (item.value || item.label))
+          .map((item) => ({
+            value: String(item.value || '').trim(),
+            label: String(item.label || '').trim(),
+          }));
+      }
+    } catch (err) {
+      // noto'g'ri JSON bo'lsa, eskisi qoladi
+    }
+  }
+
+  if (req.file) {
+    removePublicFile(about.image);
+    about.image = `/uploads/${req.file.filename}`;
+  } else if (typeof req.body.image === 'string' && req.body.image.trim()) {
+    const safeImage = safePhotoPath(req.body.image);
+    if (safeImage) about.image = safeImage;
+  }
+
+  content.about = about;
+  writeContent(content)
+    .then(() => res.json({ success: true, about: content.about }))
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ error: "Saqlashda xatolik yuz berdi" });
+    });
+});
+
+// PUT /api/content/schedule - dars jadvali (faqat admin)
+router.put('/schedule', authMiddleware, (req, res) => {
+  const schedule = req.body && req.body.schedule;
+
+  if (!schedule || typeof schedule !== 'object' || !Array.isArray(schedule.sections)) {
+    return res.status(400).json({ error: "Jadval ma'lumoti noto'g'ri" });
+  }
+
+  const content = readContent();
+  content.schedule = schedule;
+
+  writeContent(content)
+    .then(() => res.json({ success: true }))
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ error: "Jadvalni saqlashda xatolik yuz berdi" });
+    });
+});
+
 // POST /api/content/:collection - yangi element qo'shish (faqat admin)
 router.post('/:collection', authMiddleware, upload.single('photo'), (req, res) => {
   const collection = req.params.collection;
