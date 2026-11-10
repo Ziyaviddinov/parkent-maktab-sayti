@@ -191,6 +191,89 @@
   }
   .counter { margin-top: 8px; font-size: 0.8rem; color: #8a93a3; }
   .counter.full { color: var(--danger); }
+
+  /* ===== Bo'limlar (tablar) ===== */
+  .tabs-wrap { padding-bottom: 0; }
+  .tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    background: var(--white);
+    padding: 8px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  }
+  .tab-btn {
+    flex: 1 1 auto;
+    border: none;
+    background: transparent;
+    padding: 11px 16px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #54627a;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { background: #f2f5fa; }
+  .tab-btn.active { background: var(--blue); color: #fff; }
+  .pane { display: none; }
+  .pane.active { display: block; }
+  .pane-title { color: var(--blue); margin: 22px 0 12px; font-size: 1.05rem; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+  @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
+  .field select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: #fff;
+  }
+  .field textarea { min-height: 80px; }
+
+  .cms-list { display: grid; gap: 10px; }
+  .cms-item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    background: var(--white);
+    padding: 12px 14px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .cms-item .thumb {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 50%;
+    background: #eef1f5;
+    flex-shrink: 0;
+  }
+  .cms-item .info { flex: 1; min-width: 0; }
+  .cms-item .info b { display: block; color: var(--blue); font-size: 0.95rem; }
+  .cms-item .info span { font-size: 0.82rem; color: #6b7688; }
+  .cms-item .actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .cms-item .actions button {
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+  .empty-note { color: #8a93a3; font-size: 0.9rem; padding: 8px 2px; }
+  .photo-preview img {
+    width: 76px;
+    height: 76px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-top: 10px;
+    border: 2px solid #e7eaf0;
+    display: block;
+  }
 </style>
 </head>
 <body>
@@ -215,7 +298,16 @@
     <h1>📰 Yangiliklar boshqaruvi — Parkent maktabi</h1>
     <button onclick="logout()">Chiqish</button>
   </header>
-  <div class="container">
+
+  <div class="container tabs-wrap">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="news" onclick="switchTab('news')">📰 Yangiliklar</button>
+      <button class="tab-btn" data-tab="teachers" onclick="switchTab('teachers')">👩‍🏫 O'qituvchilar</button>
+      <button class="tab-btn" data-tab="leadership" onclick="switchTab('leadership')">🏛️ Rahbariyat</button>
+    </div>
+  </div>
+
+  <div class="container pane active" id="paneNews">
 
     <div class="card-form">
       <h3 id="formTitle">Yangi yangilik qo'shish</h3>
@@ -250,6 +342,89 @@
     <div class="news-list" id="newsList"></div>
 
   </div>
+
+  <!-- ================= O'QITUVCHILAR ================= -->
+  <div class="container pane" id="paneTeachers">
+    <div class="card-form">
+      <h3 id="teacherFormTitle">Nima qilmoqchisiz?</h3>
+      <div class="form-grid">
+        <div class="field">
+          <label>F.I.SH *</label>
+          <input type="text" id="tName" placeholder="Nuriddinova Nargiza Risqiboyevna">
+        </div>
+        <div class="field">
+          <label>Fan / lavozim</label>
+          <input type="text" id="tSubject" placeholder="Matematika fani o'qituvchisi">
+        </div>
+        <div class="field">
+          <label>Saytdagi bo'lim (guruh)</label>
+          <select id="tGroup"></select>
+        </div>
+        <div class="field">
+          <label>Toifasi</label>
+          <input type="text" id="tCategory" placeholder="Oliy / Birinchi / Mutaxassis">
+        </div>
+        <div class="field">
+          <label>Mutaxassisligi</label>
+          <input type="text" id="tSpecialty" placeholder="Matematika o'qitish metodikasi">
+        </div>
+        <div class="field">
+          <label>Ta'lim muassasasi</label>
+          <input type="text" id="tEducation" placeholder="Nizomiy nomidagi TDPU">
+        </div>
+      </div>
+      <div class="field">
+        <label>Rasm <span class="hint">(5MB gacha, ixtiyoriy)</span></label>
+        <input type="file" id="tPhoto" accept="image/*">
+        <div class="photo-preview" id="tPhotoPreview"></div>
+      </div>
+      <button class="btn-primary" onclick="saveTeacher()" id="tSaveBtn">Qo'shish</button>
+      <button class="btn-primary" style="background:#888; margin-top:8px; display:none;" id="tCancelBtn" onclick="cancelTeacherEdit()">Tahrirlashni bekor qilish</button>
+      <button class="btn-primary" style="background:#5b6b82; margin-top:8px;" onclick="importTeachers()">Saytdagi mavjud ro'yxatni import qilish</button>
+      <div class="status-msg" id="tStatus"></div>
+    </div>
+
+    <h3 class="pane-title">O'qituvchilar ro'yxati</h3>
+    <div class="cms-list" id="teachersList"></div>
+  </div>
+
+  <!-- ================= RAHBARIYAT ================= -->
+  <div class="container pane" id="paneLeadership">
+    <div class="card-form">
+      <h3 id="leaderFormTitle">Nima qilmoqchisiz?</h3>
+      <div class="form-grid">
+        <div class="field">
+          <label>F.I.SH *</label>
+          <input type="text" id="lName" placeholder="Yunusov Nabijon Erkinovich">
+        </div>
+        <div class="field">
+          <label>Lavozimi</label>
+          <input type="text" id="lRole" placeholder="Direktor">
+        </div>
+      </div>
+      <div class="field">
+        <label>Qisqacha ma'lumot</label>
+        <textarea id="lBio" placeholder="Maktabning umumiy faoliyatini boshqaradi."></textarea>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Telefon (ixtiyoriy)</label>
+          <input type="text" id="lPhone" placeholder="+998 90 000 00 00">
+        </div>
+        <div class="field">
+          <label>Rasm <span class="hint">(5MB gacha, ixtiyoriy)</span></label>
+          <input type="file" id="lPhoto" accept="image/*">
+        </div>
+      </div>
+      <div class="photo-preview" id="lPhotoPreview"></div>
+      <button class="btn-primary" onclick="saveLeader()" id="lSaveBtn">Qo'shish</button>
+      <button class="btn-primary" style="background:#888; margin-top:8px; display:none;" id="lCancelBtn" onclick="cancelLeaderEdit()">Tahrirlashni bekor qilish</button>
+      <div class="status-msg" id="lStatus"></div>
+    </div>
+
+    <h3 class="pane-title">Rahbariyat ro'yxati</h3>
+    <div class="cms-list" id="leadershipList"></div>
+  </div>
 </div>
 
 <script>
@@ -272,6 +447,7 @@ function showApp() {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('appScreen').style.display = 'block';
   loadNews();
+  loadContent();
 }
 
 function showLogin() {
@@ -604,6 +780,428 @@ const uploadBox = document.getElementById('uploadBox');
 });
 uploadBox.addEventListener('drop', (e) => {
   if (e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files);
+});
+
+/* ================= O'QITUVCHILAR VA RAHBARIYAT ================= */
+
+const CMS_GROUPS = [
+  { key: 'matematika', label: 'Matematika' },
+  { key: 'fizika', label: 'Fizika' },
+  { key: 'informatika', label: 'Informatika' },
+  { key: 'kimyo-biologiya', label: 'Kimyo va Biologiya' },
+  { key: 'ingliz', label: 'Ingliz tili' },
+  { key: 'rus', label: 'Rus tili' },
+  { key: 'ona', label: 'Ona tili va adabiyot' },
+  { key: 'ijtimoiy', label: 'Ijtimoiy fanlar' },
+  { key: 'sport-harbiy', label: 'Sport va CHQBT' }
+];
+
+const EMPTY_AVATAR = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><rect width="120" height="120" fill="#eef1f5"/><circle cx="60" cy="45" r="20" fill="#c7cfda"/><rect x="30" y="72" width="60" height="32" rx="16" fill="#c7cfda"/></svg>'
+);
+
+let contentCache = { teachers: [], leadership: [] };
+let editingTeacherId = null;
+let editingLeaderId = null;
+
+function groupLabel(key) {
+  const found = CMS_GROUPS.find((g) => g.key === key);
+  return found ? found.label : 'Boshqa';
+}
+
+function cmsImage(path) {
+  if (!path) return EMPTY_AVATAR;
+  if (/^https?:\/\//.test(path)) return path;
+  if (path.charAt(0) === '/') return API_URL + path;
+  return path;
+}
+
+function setStatusEl(id, message, isError) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = message || '';
+  el.className = 'status-msg' + (message ? (isError ? ' error' : ' success') : '');
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach((b) => b.classList.toggle('active', b.dataset.tab === name));
+  document.querySelectorAll('.pane').forEach((p) => {
+    p.classList.toggle('active', p.id === 'pane' + name.charAt(0).toUpperCase() + name.slice(1));
+  });
+  if (name !== 'news') loadContent();
+}
+
+function initGroupSelect() {
+  const sel = document.getElementById('tGroup');
+  if (!sel) return;
+  sel.innerHTML = CMS_GROUPS.map((g) => `<option value="${g.key}">${g.label}</option>`).join('');
+}
+
+async function loadContent() {
+  try {
+    const res = await fetch(`${API_URL}/api/content`);
+    const data = await res.json();
+    contentCache.teachers = Array.isArray(data.teachers) ? data.teachers : [];
+    contentCache.leadership = Array.isArray(data.leadership) ? data.leadership : [];
+    renderTeachersList();
+    renderLeadershipList();
+  } catch (err) {
+    console.log('Kontentni yuklab bo\'lmadi:', err.message);
+  }
+}
+
+function renderTeachersList() {
+  const el = document.getElementById('teachersList');
+  if (!el) return;
+
+  if (!contentCache.teachers.length) {
+    el.innerHTML = '<p class="empty-note">Hozircha admin panel orqali qo\'shilgan o\'qituvchilar yo\'q. Saytda hozircha eski (qo\'lda yozilgan) ro\'yxat ko\'rinadi.</p>';
+    return;
+  }
+
+  el.innerHTML = contentCache.teachers.map((t) => `
+    <div class="cms-item">
+      <img class="thumb" src="${cmsImage(t.photo)}" alt="">
+      <div class="info">
+        <b>${escapeHtml(t.name)}</b>
+        <span>${escapeHtml(t.subject || '')}${t.subject ? ' · ' : ''}${groupLabel(t.group)}</span>
+      </div>
+      <div class="actions">
+        <button class="btn-edit" onclick="editTeacher('${t.id}')">Tahrirlash</button>
+        <button class="btn-delete" onclick="deleteTeacher('${t.id}')">O'chirish</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderLeadershipList() {
+  const el = document.getElementById('leadershipList');
+  if (!el) return;
+
+  if (!contentCache.leadership.length) {
+    el.innerHTML = '<p class="empty-note">Hozircha qo\'shilgan rahbariyat a\'zolari yo\'q. Saytda eski ro\'yxat ko\'rinadi.</p>';
+    return;
+  }
+
+  el.innerHTML = contentCache.leadership.map((p) => `
+    <div class="cms-item">
+      <img class="thumb" src="${cmsImage(p.photo)}" alt="">
+      <div class="info">
+        <b>${escapeHtml(p.name)}</b>
+        <span>${escapeHtml(p.role || '')}</span>
+      </div>
+      <div class="actions">
+        <button class="btn-edit" onclick="editLeader('${p.id}')">Tahrirlash</button>
+        <button class="btn-delete" onclick="deleteLeader('${p.id}')">O'chirish</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function showPreview(id, file) {
+  const box = document.getElementById(id);
+  if (!box) return;
+  box.innerHTML = '';
+  if (!file) return;
+  const img = document.createElement('img');
+  img.src = URL.createObjectURL(file);
+  box.appendChild(img);
+}
+
+function cancelTeacherEdit() {
+  editingTeacherId = null;
+  document.getElementById('tName').value = '';
+  document.getElementById('tSubject').value = '';
+  document.getElementById('tCategory').value = '';
+  document.getElementById('tSpecialty').value = '';
+  document.getElementById('tEducation').value = '';
+  document.getElementById('tPhoto').value = '';
+  document.getElementById('tPhotoPreview').innerHTML = '';
+  document.getElementById('teacherFormTitle').textContent = 'Nima qilmoqchisiz?';
+  document.getElementById('tSaveBtn').textContent = "Qo'shish";
+  document.getElementById('tCancelBtn').style.display = 'none';
+  setStatusEl('tStatus', '');
+}
+
+function editTeacher(id) {
+  const item = contentCache.teachers.find((t) => t.id === id);
+  if (!item) return;
+
+  editingTeacherId = id;
+  document.getElementById('tName').value = item.name || '';
+  document.getElementById('tSubject').value = item.subject || '';
+  document.getElementById('tGroup').value = item.group || CMS_GROUPS[0].key;
+  document.getElementById('tCategory').value = item.category || '';
+  document.getElementById('tSpecialty').value = item.specialty || '';
+  document.getElementById('tEducation').value = item.education || '';
+  document.getElementById('tPhoto').value = '';
+  document.getElementById('tPhotoPreview').innerHTML = item.photo
+    ? '<img src="' + cmsImage(item.photo) + '" alt="">'
+    : '';
+  document.getElementById('teacherFormTitle').textContent = "O'qituvchini tahrirlash";
+  document.getElementById('tSaveBtn').textContent = 'Saqlash';
+  document.getElementById('tCancelBtn').style.display = 'block';
+  setStatusEl('tStatus', '');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function saveTeacher() {
+  const name = document.getElementById('tName').value.trim();
+  if (!name) {
+    setStatusEl('tStatus', "F.I.SH ni kiriting", true);
+    return;
+  }
+
+  const fd = new FormData();
+  fd.append('name', name);
+  fd.append('subject', document.getElementById('tSubject').value.trim());
+  fd.append('group', document.getElementById('tGroup').value);
+  fd.append('category', document.getElementById('tCategory').value.trim());
+  fd.append('specialty', document.getElementById('tSpecialty').value.trim());
+  fd.append('education', document.getElementById('tEducation').value.trim());
+
+  const photo = document.getElementById('tPhoto').files[0];
+  if (photo) fd.append('photo', photo);
+
+  const url = editingTeacherId
+    ? `${API_URL}/api/content/teachers/${editingTeacherId}`
+    : `${API_URL}/api/content/teachers`;
+
+  const btn = document.getElementById('tSaveBtn');
+  const wasEditing = Boolean(editingTeacherId);
+  btn.disabled = true;
+  setStatusEl('tStatus', 'Saqlanmoqda...');
+
+  try {
+    const res = await fetch(url, {
+      method: wasEditing ? 'PUT' : 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: fd,
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (res.status === 401) { logout(); return; }
+      setStatusEl('tStatus', data.error || 'Xatolik yuz berdi', true);
+      return;
+    }
+
+    cancelTeacherEdit();
+    setStatusEl('tStatus', wasEditing ? 'Yangilandi!' : "Qo'shildi!", false);
+    loadContent();
+  } catch (err) {
+    setStatusEl('tStatus', "Serverga ulanib bo'lmadi", true);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function deleteTeacher(id) {
+  if (!confirm("Bu o'qituvchini ro'yxatdan o'chirmoqchimisiz?")) return;
+  try {
+    const res = await fetch(`${API_URL}/api/content/teachers/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (res.status === 401) { logout(); return; }
+    loadContent();
+  } catch (err) {
+    alert("O'chirishda xatolik yuz berdi");
+  }
+}
+
+function cancelLeaderEdit() {
+  editingLeaderId = null;
+  document.getElementById('lName').value = '';
+  document.getElementById('lRole').value = '';
+  document.getElementById('lBio').value = '';
+  document.getElementById('lPhone').value = '';
+  document.getElementById('lPhoto').value = '';
+  document.getElementById('lPhotoPreview').innerHTML = '';
+  document.getElementById('leaderFormTitle').textContent = 'Nima qilmoqchisiz?';
+  document.getElementById('lSaveBtn').textContent = "Qo'shish";
+  document.getElementById('lCancelBtn').style.display = 'none';
+  setStatusEl('lStatus', '');
+}
+
+function editLeader(id) {
+  const item = contentCache.leadership.find((p) => p.id === id);
+  if (!item) return;
+
+  editingLeaderId = id;
+  document.getElementById('lName').value = item.name || '';
+  document.getElementById('lRole').value = item.role || '';
+  document.getElementById('lBio').value = item.bio || '';
+  document.getElementById('lPhone').value = item.phone || '';
+  document.getElementById('lPhoto').value = '';
+  document.getElementById('lPhotoPreview').innerHTML = item.photo
+    ? '<img src="' + cmsImage(item.photo) + '" alt="">'
+    : '';
+  document.getElementById('leaderFormTitle').textContent = "Rahbariyat a'zosini tahrirlash";
+  document.getElementById('lSaveBtn').textContent = 'Saqlash';
+  document.getElementById('lCancelBtn').style.display = 'block';
+  setStatusEl('lStatus', '');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function saveLeader() {
+  const name = document.getElementById('lName').value.trim();
+  if (!name) {
+    setStatusEl('lStatus', "F.I.SH ni kiriting", true);
+    return;
+  }
+
+  const fd = new FormData();
+  fd.append('name', name);
+  fd.append('role', document.getElementById('lRole').value.trim());
+  fd.append('bio', document.getElementById('lBio').value.trim());
+  fd.append('phone', document.getElementById('lPhone').value.trim());
+
+  const photo = document.getElementById('lPhoto').files[0];
+  if (photo) fd.append('photo', photo);
+
+  const url = editingLeaderId
+    ? `${API_URL}/api/content/leadership/${editingLeaderId}`
+    : `${API_URL}/api/content/leadership`;
+
+  const btn = document.getElementById('lSaveBtn');
+  btn.disabled = true;
+  setStatusEl('lStatus', 'Saqlanmoqda...');
+
+  try {
+    const res = await fetch(url, {
+      method: editingLeaderId ? 'PUT' : 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: fd,
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (res.status === 401) { logout(); return; }
+      setStatusEl('lStatus', data.error || 'Xatolik yuz berdi', true);
+      return;
+    }
+
+    cancelLeaderEdit();
+    setStatusEl('lStatus', 'Saqlandi!', false);
+    loadContent();
+  } catch (err) {
+    setStatusEl('lStatus', "Serverga ulanib bo'lmadi", true);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function deleteLeader(id) {
+  if (!confirm("Bu shaxsni ro'yxatdan o'chirmoqchimisiz?")) return;
+  try {
+    const res = await fetch(`${API_URL}/api/content/leadership/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (res.status === 401) { logout(); return; }
+    loadContent();
+  } catch (err) {
+    alert("O'chirishda xatolik yuz berdi");
+  }
+}
+
+async function importTeachers() {
+  if (!confirm("Saytdagi mavjud o'qituvchilar ro'yxati admin panelga ko'chiriladi (bir marta bajariladi). Davom etamizmi?")) return;
+
+  setStatusEl('tStatus', "Sayt ro'yxati o'qilmoqda...");
+
+  let doc;
+  try {
+    const res = await fetch('oqituvchilar.html', { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    doc = new DOMParser().parseFromString(await res.text(), 'text/html');
+  } catch (err) {
+    setStatusEl('tStatus', "Sahifani o'qib bo'lmadi (saytni internet orqali ochib urinib ko'ring)", true);
+    return;
+  }
+
+  const cards = [];
+  doc.querySelectorAll('.subject-group[data-subject]').forEach((group) => {
+    const groupKey = group.getAttribute('data-subject');
+
+    group.querySelectorAll('.teacher-card-h').forEach((card) => {
+      const nameEl = card.querySelector('h4');
+      const name = nameEl ? nameEl.textContent.trim() : '';
+      if (!name) return;
+
+      const details = Array.prototype.map.call(
+        card.querySelectorAll('.teacher-card-h-details p'),
+        (p) => p.textContent.replace(/\s+/g, ' ').trim()
+      );
+      const photoEl = card.querySelector('img');
+      const subjectEl = card.querySelector('.teacher-card-h-subject');
+
+      cards.push({
+        group: groupKey,
+        name: name,
+        subject: subjectEl ? subjectEl.textContent.trim() : '',
+        category: (details[0] || '').replace(/^Toifasi:\s*/i, '').trim(),
+        specialty: details[1] || '',
+        education: details[2] || '',
+        photo: photoEl ? (photoEl.getAttribute('src') || '') : ''
+      });
+    });
+  });
+
+  if (!cards.length) {
+    setStatusEl('tStatus', "Import qilish uchun o'qituvchilar topilmadi", true);
+    return;
+  }
+
+  const existing = {};
+  contentCache.teachers.forEach((t) => { existing[t.name] = true; });
+  const pending = cards.filter((c) => !existing[c.name]);
+
+  if (!pending.length) {
+    setStatusEl('tStatus', "Barcha o'qituvchilar allaqachon qo'shilgan", false);
+    return;
+  }
+
+  let done = 0;
+  let failed = 0;
+
+  for (const c of pending) {
+    const fd = new FormData();
+    fd.append('name', c.name);
+    fd.append('subject', c.subject);
+    fd.append('group', c.group);
+    fd.append('category', c.category);
+    fd.append('specialty', c.specialty);
+    fd.append('education', c.education);
+    if (c.photo) fd.append('photo', c.photo);
+
+    try {
+      const res = await fetch(`${API_URL}/api/content/teachers`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: fd,
+      });
+      if (res.ok) done += 1;
+      else failed += 1;
+    } catch (err) {
+      failed += 1;
+    }
+
+    setStatusEl('tStatus', `Import qilinmoqda: ${done + failed}/${pending.length}`);
+  }
+
+  setStatusEl('tStatus', `${done} ta o'qituvchi qo'shildi${failed ? ', ' + failed + " tasida xatolik" : ''}`, failed > 0);
+  loadContent();
+}
+
+initGroupSelect();
+
+document.getElementById('tPhoto').addEventListener('change', function () {
+  showPreview('tPhotoPreview', this.files[0]);
+});
+document.getElementById('lPhoto').addEventListener('change', function () {
+  showPreview('lPhotoPreview', this.files[0]);
 });
 
 renderPreviews();

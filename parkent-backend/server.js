@@ -22,6 +22,7 @@ app.get('/api/health', (req, res) => {
 // Routelar (keyingi bosqichlarda to'ldiriladi)
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/news', require('./routes/news'));
+app.use('/api/content', require('./routes/content'));
 app.use('/api/auth', require('./routes/auth'));
 
 // 404 handler
