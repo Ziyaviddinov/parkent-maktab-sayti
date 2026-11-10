@@ -596,6 +596,20 @@
             margin-bottom: 28px;
         }
 
+        /* Rasm soniga qarab to'r avtomatik moslashadi */
+        .ndm-gallery[data-count="1"] {
+            grid-template-columns: minmax(0, 560px);
+            justify-content: center;
+        }
+
+        .ndm-gallery[data-count="2"] {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .ndm-gallery[data-count="4"] {
+            grid-template-columns: 1fr 1fr;
+        }
+
         .ndm-gallery-item {
             border-radius: 10px;
             overflow: hidden;
@@ -791,6 +805,10 @@
                 gap: 8px
             }
 
+            .ndm-gallery[data-count="1"] {
+                grid-template-columns: 1fr;
+            }
+
             .ndm-info-grid {
                 grid-template-columns: 1fr 1fr;
                 gap: 8px
@@ -817,6 +835,10 @@
         @media(max-width:640px) {
             .ndm-gallery {
                 grid-template-columns: 1fr 1fr
+            }
+
+            .ndm-gallery[data-count="1"] {
+                grid-template-columns: 1fr
             }
 
             .ndm-info-grid {
@@ -1269,7 +1291,7 @@
                         <div class="mega-col">
                             <h4>Xabarlar</h4>
                             <ul>
-                                <li><a href="yangiliklar.html" class="active">So'nggi yangiliklar</a></li>
+                                <li><a href="songgi-yangiliklar.html" class="active">So'nggi yangiliklar</a></li>
                                 <li><a href="kutilayotgan-tadbirlar.html">Kutilayotgan tadbirlar</a></li>
                             </ul>
                         </div>
@@ -1581,7 +1603,7 @@
                         <li><a href="index.html#about">Maktab haqida</a></li>
                         <li><a href="index.html#features">Ta'lim</a></li>
                         <li><a href="index.html#teachers">O'qituvchilar</a></li>
-                        <li><a href="yangiliklar.html">Yangiliklar</a></li>
+                        <li><a href="songgi-yangiliklar.html">Yangiliklar</a></li>
                         <li><a href="index.html#schedule">Dars jadvali</a></li>
                         <li><a href="index.html#contact">Bog'lanish</a></li>
                     </ul>
@@ -1900,17 +1922,18 @@
             document.getElementById('ndmText').innerHTML = data.text || '';
 
             var imgs = data.gallery || [];
-            var icons = data.galleryIcons || [];
-            var total = Math.max(imgs.length, 4);
+            var galleryEl = document.getElementById('ndmGallery');
+            var gallerySectionEl = document.getElementById('ndmGallerySection');
             var galHTML = '';
-            for (var i = 0; i < total; i++) {
-                if (imgs[i]) {
-                    galHTML += '<div class="ndm-gallery-item" data-lb="' + imgs[i] + '"><img src="' + imgs[i] + '" alt="rasm ' + (i + 1) + '"><div class="ndm-gallery-placeholder" style="display:none;"><i class="fa-solid ' + (icons[i] || 'fa-image') + '"></i></div><div class="ndm-gallery-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>';
-                } else {
-                    galHTML += '<div class="ndm-gallery-item" style="cursor:default;"><div class="ndm-gallery-placeholder"><i class="fa-solid ' + (icons[i] || 'fa-image') + '"></i></div></div>';
-                }
+
+            for (var i = 0; i < imgs.length; i++) {
+                galHTML += '<div class="ndm-gallery-item" data-lb="' + imgs[i] + '"><img src="' + imgs[i] + '" alt="rasm ' + (i + 1) + '" loading="lazy"><div class="ndm-gallery-item-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>';
             }
-            document.getElementById('ndmGallery').innerHTML = galHTML;
+
+            galleryEl.innerHTML = galHTML;
+            galleryEl.dataset.count = String(imgs.length);
+            // Rasm bo'lmasa "Fotogalereya" bo'limi umuman ko'rinmaydi
+            if (gallerySectionEl) gallerySectionEl.style.display = imgs.length ? '' : 'none';
 
             document.getElementById('ndmInfoGrid').innerHTML = (data.info || []).map(function (item) {
                 return '<div class="ndm-info-item"><div class="label">' + item.label + '</div><div class="value">' + item.value + '</div></div>';
