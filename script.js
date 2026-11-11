@@ -226,16 +226,33 @@ let SCHEDULE = {
   }
 };
 
-// Dars vaqtlari (1-7 dars)
-const TIMES = [
-  '8:00 – 8:45',
-  '8:55 – 9:40',
-  '9:50 – 10:35',
-  '10:45 – 11:30',
+// Dars vaqtlari
+// 5-6 sinflar: 3-darsdan keyin 45 daqiqalik tushlik
+const TIMES_PRIMARY = [
+  '8:30 – 9:15',
+  '9:20 – 10:05',
+  '10:10 – 10:55',
+  '10:55 – 11:40',   // Tushlik (45 daqiqa)
   '11:40 – 12:25',
-  '13:10 – 13:55',
+  '12:30 – 13:15',
+  '13:20 – 14:05'
+];
+
+// 7-11 sinflar: 3-darsdan keyin 20 daqiqa, 4-darsdan keyin 25 daqiqa tanaffus
+const TIMES_SENIOR = [
+  '8:30 – 9:15',
+  '9:20 – 10:05',
+  '10:10 – 10:55',
+  '11:15 – 12:00',
+  '12:25 – 13:10',
+  '13:15 – 14:00',
   '14:05 – 14:50'
 ];
+
+function getTimes(className) {
+  const grade = parseInt(String(className || '').split('-')[0], 10);
+  return grade >= 5 && grade <= 6 ? TIMES_PRIMARY : TIMES_SENIOR;
+}
 
 // Sinflarni guruhlash
 let CLASS_GROUPS = {};
@@ -331,6 +348,7 @@ function buildScheduleUI() {
 
   function renderTable() {
     const lessons = SCHEDULE[activeClass]?.[activeDay] || [];
+    const times = getTimes(activeClass);
     let rows = '';
     let lessonCount = 0;
     lessons.forEach((lesson, i) => {
@@ -339,15 +357,15 @@ function buildScheduleUI() {
       if (String(fan).toUpperCase() === 'TUSHLIK') {
         rows += `<tr class="schedule-lunch-row">
           <td class="td-num">${i + 1}</td>
-          <td class="td-time">${TIMES[i] || '—'}</td>
-          <td class="td-subject" colspan="2">Tushlik</td>
+          <td class="td-time">${times[i] || '—'}</td>
+          <td class="td-subject" colspan="2">Tushlik (45 daqiqa)</td>
         </tr>`;
         return;
       }
       lessonCount += 1;
       rows += `<tr>
         <td class="td-num">${i + 1}</td>
-        <td class="td-time">${TIMES[i] || '—'}</td>
+        <td class="td-time">${times[i] || '—'}</td>
         <td class="td-subject">${fan}</td>
         <td class="td-room"><span class="room-badge">${xona}</span></td>
       </tr>`;
