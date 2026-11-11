@@ -633,6 +633,12 @@
         <div class="field"><label>YouTube</label><input type="text" id="setYoutube"></div>
       </div>
 
+      <div class="field">
+        <label>Telegram guruh ID <span class="hint">(bog'lanish formasi shu guruhga yuboriladi)</span></label>
+        <input type="text" id="setChatId" placeholder="-1003886626312">
+        <p class="hint" style="margin-top:6px;">Guruh sozlamalarida "ID" ko'rinadi. Bir nechta ID ni vergul bilan yozish mumkin.</p>
+      </div>
+
       <button class="btn-primary" onclick="saveSettings()" id="setSaveBtn">Saqlash</button>
       <div class="status-msg" id="setStatus"></div>
     </div>
@@ -2054,6 +2060,7 @@ function renderSettingsForm() {
     setInstagram: 'instagram',
     setFacebook: 'facebook',
     setYoutube: 'youtube',
+    setChatId: 'contactChatId',
   };
 
   Object.keys(map).forEach((id) => {
@@ -2071,6 +2078,7 @@ async function saveSettings() {
     instagram: document.getElementById('setInstagram').value.trim(),
     facebook: document.getElementById('setFacebook').value.trim(),
     youtube: document.getElementById('setYoutube').value.trim(),
+    contactChatId: document.getElementById('setChatId').value.trim(),
   };
 
   const btn = document.getElementById('setSaveBtn');

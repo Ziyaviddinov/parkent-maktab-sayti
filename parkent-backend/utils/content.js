@@ -15,7 +15,8 @@ const DEFAULT_CONTENT = {
     telegram: 'https://t.me/Parkent_tuman_IM',
     instagram: 'https://www.instagram.com/parkent_pima',
     facebook: 'https://www.facebook.com/groups/1553604381759572/',
-    youtube: 'https://www.youtube.com/@PIMAParkent'
+    youtube: 'https://www.youtube.com/@PIMAParkent',
+    contactChatId: ''
   },
   teachers: [],
   leadership: [],
