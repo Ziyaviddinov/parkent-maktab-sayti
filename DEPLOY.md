@@ -83,3 +83,14 @@ const NEWS_API_URL = 'https://parkent-api.onrender.com';
 - Backend ishlamayapti → `render.com` yoki serveringiz loglarini tekshiring
 - Yangiliklar chiqmayapti → brauzer konsolida (F12 → Console) xatolikni ko'ring, odatda CORS yoki noto'g'ri `API_URL` sabab bo'ladi
 - Bot javob bermayapti → `ADMIN_TELEGRAM_IDS` to'g'ri kiritilganini va `node bot.js` ishlab turganini tekshiring
+
+## GitHub'da doimiy saqlash (ma'lumot va rasmlar)
+
+Admin paneldagi o'zgarishlar (yangiliklar, o'qituvchilar, sozlamalar, jadval) va yuklangan rasmlar GitHub repozitoriyasiga commit qilinadi. Server qayta ishga tushsa, ma'lumotlar shu yerdan tiklanadi.
+
+1. **Alohida repo yarating** (masalan `parkent-data`). Asosiy sayt repo'sidan ajratish tavsiya etiladi: har bir saqlash commit bo'lgani uchun, Render avtomatik deploy qilsa, sayt tez-tez qayta yuklanadi.
+2. **Token yarating:** GitHub > Settings > Developer settings > Fine-grained tokens. Faqat shu repo, "Contents: Read and write" huquqi.
+3. **Env o'zgaruvchilarini qo'shing** (Render > Environment): `GITHUB_TOKEN`, `GITHUB_REPO=egasi/parkent-data`, `GITHUB_BRANCH=main`.
+4. **Birinchi ishga tushirishda** `data/content.json` va `data/news.json` avtomatik repoga yuklanadi.
+
+Muhim: bot (`bot.js`) va server (`server.js`) alohida jarayon bo'lsa, ikkalasi bir vaqtda `news.json` ni yozishi mumkin. Bitta jarayonda ishlatish yoki botni ham shu serverda, bir xil `data/` bilan ishga tushirish tavsiya etiladi.

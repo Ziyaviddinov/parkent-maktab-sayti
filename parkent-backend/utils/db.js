@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const github = require('./github');
 
 const DB_PATH = path.join(__dirname, '..', 'data', 'news.json');
 
@@ -23,15 +24,11 @@ function readAll() {
 function writeAll(data) {
   writeQueue = writeQueue
     .catch(() => {}) // oldingi yozish xato bo'lsa ham navbat davom etsin
-    .then(
-      () =>
-        new Promise((resolve, reject) => {
-          fs.writeFile(DB_PATH, JSON.stringify(data, null, 2), 'utf-8', (err) => {
-            if (err) reject(err);
-            else resolve();
-          });
-        })
-    );
+    .then(async () => {
+      const json = JSON.stringify(data, null, 2);
+      await fs.promises.writeFile(DB_PATH, json, 'utf-8');
+      await github.putFile('data/news.json', Buffer.from(json, 'utf-8'), 'news: yangiliklar yangilandi');
+    });
   return writeQueue;
 }
 

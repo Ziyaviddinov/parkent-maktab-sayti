@@ -1,4 +1,5 @@
 const express = require('express');
+const github = require('../utils/github');
 const fs = require('fs');
 const path = require('path');
 const router = express.Router();
@@ -42,6 +43,10 @@ function removePublicFile(publicPath) {
   const uploadsDir = path.join(__dirname, '..', 'uploads');
   const filePath = path.join(__dirname, '..', publicPath);
   if (!filePath.startsWith(uploadsDir + path.sep)) return;
+
+  github.deleteFile(publicPath.replace(/^\//, ''), 'upload: eski rasm o\'chirildi').catch((err) =>
+    console.error("GitHub'dan rasmni o'chirishda xatolik:", err.message)
+  );
 
   if (fs.existsSync(filePath)) {
     try {

@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const { syncFromGithub } = require('./utils/persist');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -36,6 +37,14 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Server xatoligi yuz berdi' });
 });
 
-app.listen(PORT, () => {
-  console.log(`✅ Server http://localhost:${PORT} da ishlamoqda`);
-});
+syncFromGithub()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`✅ Server http://localhost:${PORT} da ishlamoqda`);
+    });
+  })
+  .catch((err) => {
+    // GitHub'dan tiklay olmasak, eski lokal ma'lumot bilan ishlamaymiz (ustidan yozib yubormaslik uchun)
+    console.error("GitHub'dan tiklashda xatolik, server to'xtatildi:", err.message);
+    process.exit(1);
+  });

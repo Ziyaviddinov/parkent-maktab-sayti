@@ -10,6 +10,8 @@ const {
   downloadFile,
 } = require('./utils/telegram');
 const { readAll, writeAll, generateId } = require('./utils/db');
+const github = require('./utils/github');
+const { syncFromGithub } = require('./utils/persist');
 
 const TOKEN = process.env.NEWS_BOT_TOKEN;
 const ADMIN_IDS = (process.env.ADMIN_TELEGRAM_IDS || '')
@@ -181,6 +183,7 @@ async function downloadTelegramPhoto(photoArray) {
   const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
   const destPath = path.join(UPLOAD_DIR, filename);
   await downloadFile(fileUrl, destPath);
+  await github.putFile(`uploads/${filename}`, fs.readFileSync(destPath), `upload: ${filename}`);
   return destPath;
 }
 
@@ -686,4 +689,9 @@ async function pollLoop() {
   }
 }
 
-pollLoop();
+syncFromGithub()
+  .then(() => pollLoop())
+  .catch((err) => {
+    console.error("GitHub'dan tiklashda xatolik, bot to'xtatildi:", err.message);
+    process.exit(1);
+  });

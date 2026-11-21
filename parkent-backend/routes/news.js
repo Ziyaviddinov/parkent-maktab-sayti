@@ -1,4 +1,5 @@
 const express = require('express');
+const github = require('../utils/github');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
@@ -55,6 +56,10 @@ function removePublicFile(publicPath) {
 
   // Faqat uploads papkasi ichidagi fayllargina o'chiriladi (path traversal himoyasi)
   if (!filePath.startsWith(uploadsDir + path.sep)) return;
+
+  github.deleteFile(publicPath.replace(/^\//, ''), 'upload: eski rasm o\'chirildi').catch((err) =>
+    console.error("GitHub'dan rasmni o'chirishda xatolik:", err.message)
+  );
 
   if (fs.existsSync(filePath)) {
     try {

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const github = require('./github');
 
 const CONTENT_PATH = path.join(__dirname, '..', 'data', 'content.json');
 
@@ -79,15 +80,11 @@ function readContent() {
 function writeContent(data) {
   writeQueue = writeQueue
     .catch(() => {})
-    .then(
-      () =>
-        new Promise((resolve, reject) => {
-          fs.writeFile(CONTENT_PATH, JSON.stringify(data, null, 2), 'utf-8', (err) => {
-            if (err) reject(err);
-            else resolve();
-          });
-        })
-    );
+    .then(async () => {
+      const json = JSON.stringify(data, null, 2);
+      await fs.promises.writeFile(CONTENT_PATH, json, 'utf-8');
+      await github.putFile('data/content.json', Buffer.from(json, 'utf-8'), 'content: admin paneldan yangilandi');
+    });
   return writeQueue;
 }
 
